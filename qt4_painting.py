@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2008 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -19,6 +19,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+
+"""
+    qt4_painting
+    ============
+
+    Uses the Qt4 painting engine to paint a rotating spiral onto a widget.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 from __future__ import print_function
 
 import sys
@@ -28,18 +39,21 @@ from getopt import getopt
 from PyQt4 import QtCore, QtGui, QtOpenGL
 
 
+# allow to enable or disable the use of opengl
 use_opengl = True
 opts, args = getopt(sys.argv[1:], 'n', ['no-opengl'])
 for opt, arg in opts:
     if opt in ('-n', '--no-opengl'):
         use_opengl = False
 
+
 if use_opengl:
+    # use QGLWidget as base class
     spiral_base = QtOpenGL.QGLWidget
     print('Enabling opengl support ...')
 else:
-    print('Enabling opengl support ...')
     spiral_base = QtGui.QWidget
+    print('Disabling opengl support ...')
 
 
 class FunnySpiral(spiral_base):
@@ -48,11 +62,14 @@ class FunnySpiral(spiral_base):
     """
 
     def __init__(self, parent=None):
-        spiral_base.__init__(self, parent)
+        super(spiral_base, self).__init__(parent)
         self.timer = QtCore.QTimer(self)
+        # the timer, which drives the animation
         self.connect(self.timer, QtCore.SIGNAL('timeout()'),
                      self, QtCore.SLOT('update()'))
+        # the angle, by which the spiral is rotated
         self.angle = 0
+        self.spiral = self.update_spiral()
 
     def start_rotation(self):
         self.timer.start(100)
@@ -60,26 +77,40 @@ class FunnySpiral(spiral_base):
     def stop_rotation(self):
         self.timer.stop()
 
-    def paintEvent(self, evt):
-        painter = QtGui.QPainter(self)
-        pen = QtGui.QPen()
-        pen.setWidth(5)
-        painter.setPen(pen)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
-        painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
-        painter.translate(self.width() / 2, self.height() / 2)
-        painter.rotate(self.angle)
+    def update_spiral(self):
+        # create a polygon providing the corner points of the spiral
         polygon = QtGui.QPolygon()
-        for i in xrange(painter.window().width()):
+        for i in xrange(self.window().width()):
             x = int(math.cos(i * 0.16) * i)
             y = int(math.sin(i * 0.16) * i)
             polygon.append(QtCore.QPoint(x, y))
-        painter.drawPolyline(polygon)
-        painter.end()
-        self.angle += 30
-        if self.angle >= 360:
-            self.angle = self.angle - 360
+        return polygon
 
+    def resizeEvent(self, evt):
+        # re-create the spiral, if the widget is resized
+        self.spiral = self.update_spiral()
+
+    def paintEvent(self, evt):
+        # create a painter
+        painter = QtGui.QPainter(self)
+        # adjust the width of the pen
+        pen = QtGui.QPen()
+        pen.setWidth(5)
+        painter.setPen(pen)
+        # enable high quality antialiasing
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
+        # move the center of the coordinate system to the widgets center
+        painter.translate(self.width() / 2, self.height() / 2)
+        # rotate the coordinate system by the given angle
+        painter.rotate(self.angle)
+        # draw the spiral
+        painter.drawPolyline(self.spiral)
+        # end painting and free resources
+        painter.end()
+        # update the angle
+        self.angle += 30
+        self.angle %= 360
 
 class SpiralWindow(QtGui.QMainWindow):
     def __init__(self, use_opengl=True):

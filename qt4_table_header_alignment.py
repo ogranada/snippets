@@ -36,8 +36,12 @@ import sys
 
 from PyQt4 import QtCore, QtGui
 
+
+# The data displayed by the model
 DATA = [
+    # first row
     ['foo', 'bar'],
+    # second row
     ['spam', 'eggs']
     ]
 
@@ -45,25 +49,32 @@ DATA = [
 class TableModel(QtCore.QAbstractTableModel):
 
     def rowCount(self, parent):
+        # return the number of rows
         return len(DATA)
 
     def columnCount(self, parent):
+        # return the number of columns
         return len(DATA[0])
 
     def headerData(self, section, orientation, role):
         if orientation != QtCore.Qt.Horizontal:
+            # don't use vertical headers!
             return QtCore.QVariant()
         if role == QtCore.Qt.DisplayRole:
+            # the text to display
             return QtCore.QVariant('No {0}'.format(section))
         elif role == QtCore.Qt.TextAlignmentRole:
+            # and the alignment
             return QtCore.QVariant(QtCore.Qt.AlignRight)
         else:
             return QtCore.QVariant()
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
         if role == QtCore.Qt.DisplayRole:
+            # the text to display!
             return QtCore.QVariant(DATA[index.row()][index.column()])
         elif role == QtCore.Qt.TextAlignmentRole:
+            # the alignment of the cell
             return QtCore.QVariant(QtCore.Qt.AlignCenter)
         else:
             return QtCore.QVariant()
@@ -86,6 +97,7 @@ class MainWindow(QtGui.QMainWindow):
         right = QtGui.QWidget(splitter)
         right.setLayout(QtGui.QVBoxLayout(right))
         right.layout().addWidget(QtGui.QLabel('QTableWidget', right))
+        # create a table widget for DATA
         tablewidget = QtGui.QTableWidget(len(DATA), len(DATA[1]), right)
         right.layout().addWidget(tablewidget)
         splitter.addWidget(right)
@@ -100,13 +112,17 @@ class MainWindow(QtGui.QMainWindow):
             widget.setVerticalHeaderItem(i, QtGui.QTableWidgetItem())
         # set horizontal headers
         for i in xrange(widget.columnCount()):
+            # the text
             item = QtGui.QTableWidgetItem('No {0}'.format(i))
+            # the alignment
             item.setTextAlignment(QtCore.Qt.AlignRight)
             widget.setHorizontalHeaderItem(i, item)
         # set data
         for y, row in enumerate(DATA):
             for x, cell in enumerate(row):
+                # the text
                 item = QtGui.QTableWidgetItem(cell)
+                # the alignment
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 widget.setItem(y, x, item)
 

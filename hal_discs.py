@@ -9,6 +9,16 @@
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
+"""
+    hal_discs
+    =========
+
+    How to retrieve the names of discs using Hal via DBus.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 from __future__ import print_function, division
 
 from functools import partial
@@ -17,14 +27,19 @@ import dbus
 
 
 def main():
+    # connect to the system bus
     bus = dbus.SystemBus()
     get_object = partial(bus.get_object, 'org.freedesktop.Hal')
+    # get the manager object
     manager = dbus.Interface(
         get_object('/org/freedesktop/Hal/Manager'),
         dbus_interface='org.freedesktop.Hal.Manager')
+    # find all discs
     for device in manager.FindDeviceByCapability('volume.disc'):
+        # get the device object
         device = dbus.Interface(get_object(device),
                                 dbus_interface='org.freedesktop.Hal.Device')
+        # and print the product name
         print(device.GetPropertyString('info.product'))
 
 

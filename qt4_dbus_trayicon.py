@@ -1,5 +1,25 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Copyright (c) 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
 
 """
     qt4_dbus_trayicon_app
@@ -9,7 +29,7 @@
     icon, to keep a single instance running and allow remote control of this
     instance.
 
-    :copyright: 2008 by Sebastian Wiesner
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
 """
 
 
@@ -20,11 +40,13 @@ import dbus.service
 from dbus.mainloop.qt import DBusQtMainLoop
 from PyQt4 import QtGui, QtCore
 
+# use the qt mainloop to handle dbus connections
 DBusQtMainLoop(set_as_default=True)
 
 
 class DBusTrayMainWindow(QtGui.QMainWindow):
     """A sample main window"""
+
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.setup_gui()
@@ -54,8 +76,8 @@ class DBusTrayMainWindow(QtGui.QMainWindow):
         # system tray
         self.systemtrayicon = QtGui.QSystemTrayIcon(self)
         self.systemtrayicon.show()
-        ## self.systemtrayicon = QtGui.QSystemTrayIcon(
-        ##     QtGui.QIcon('/path/to/fancy/icon'), self)
+        # set a fancy icon
+        ## self.systemtrayicon.setIcon(QtGui.QIcon('/path/to/fancy/icon'))
         self.connect(change_button, QtCore.SIGNAL('clicked()'),
                      self.change_text)
         self.connect(quit_button, QtCore.SIGNAL('clicked()'),
@@ -76,17 +98,19 @@ class DBusTrayMainWindow(QtGui.QMainWindow):
         self.label.setText(self.input_field.text())
 
     def closeEvent(self, evt):
+        # only hide, if the user requests a close
         evt.ignore()
         self.hide()
 
 
 class DBusTrayMainWindowObject(dbus.service.Object):
-    """DBus service object for the mainwindow."""
+    """DBus wrapper object for the mainwindow."""
+
     def __init__(self, mainwindow, bus):
         """Creates a new service object. `mainwindow` specifies the window,
         which is to be exposed through this service object. `bus` is the
         DBus bus, at which this object is registered."""
-        # register this object on
+        # register this object on the given bus
         dbus.service.Object.__init__(self, bus,
                                      # the dbus object path
                                      '/lunar/PyQt4DBusTest/MainWindow')
@@ -107,23 +131,23 @@ def main():
     bus = dbus.SessionBus()
 
     try:
-        # try to connect to our service. If this fails with a dbus
-        # exception,the application is already running.
+        # try to connect to our service.  If this fails with a dbus
+        # exception, the application is already running.
         mainwindow = bus.get_object('lunar.PyQt4DBusTest',
                                     '/lunar/PyQt4DBusTest/MainWindow')
     except dbus.DBusException:
-        # the application is not running, we need to fire it up
-        # register a new service for out application
+        # the application is not running, so the service is registered and
+        # the window created
         name = dbus.service.BusName('lunar.PyQt4DBusTest', bus)
         mainwindow = DBusTrayMainWindow()
-        # register the service object for our main window
+        # register the service object for the main window
         mainwindowobject = DBusTrayMainWindowObject(mainwindow, bus)
         # show the window and get the message loop running
         mainwindow.show()
         app.exec_()
     else:
         # the try clause completed, the application must therefore be
-        # running. So lets just show its main window
+        # running.  Now the mainwindow is shown and activated.
         mainwindow.show()
         mainwindow.activateWindow()
 

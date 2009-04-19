@@ -21,39 +21,31 @@
 # DEALINGS IN THE SOFTWARE.
 
 
+"""
+    kde4_phonon
+    ===========
+
+    How to implement a simple video player using KDEs new media framework
+    phonon.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 import sys
 
 from PyQt4 import QtCore, QtGui
 from PyKDE4.phonon import Phonon
 
 
-class MediaPlayer(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(QtGui.QWidget, self).__init__(parent)
-
-        self.setLayout(QtGui.QVBoxLayout(self))
-        self.layout().addWidget(self.player)
-        buttons = QtGui.QHBoxLayout(self)
-        self.layout().addLayout(buttons)
-        playpause = QtGui.QPushButton('Play/Pause', self)
-        playpause.setObjectName('playpause')
-        buttons.addWidget(playpause)
-        QtCore.QMetaObject.connectSlotsByName(self)
-
-    @QtCore.pyqtSignature('')
-    def on_playpause_clicked(self):
-        if self.player.isPlaying():
-            self.player.pause()
-        else:
-            self.player.play()
-
-
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         super(QtGui.QMainWindow, self).__init__(parent)
+        # create the video player
         self.player = Phonon.VideoPlayer(self)
         self.setCentralWidget(self.player)
         self.actions = self.addToolBar('Actions')
+        # create some actions to open and play video files
         self.open = QtGui.QAction(self.style().standardIcon(
             QtGui.QStyle.SP_DialogOpenButton), 'Open', self)
         self.open.setObjectName('open')
@@ -63,10 +55,12 @@ class MainWindow(QtGui.QMainWindow):
             QtGui.QStyle.SP_MediaPause), 'Pause', self)
         self.stop = QtGui.QAction(self.style().standardIcon(
             QtGui.QStyle.SP_MediaStop), 'Stop', self)
+        # add the actions to the toolbar
         self.actions.addAction(self.open)
         self.actions.addAction(self.play)
         self.actions.addAction(self.pause)
         self.actions.addAction(self.stop)
+        # and connect them with the player
         QtCore.QMetaObject.connectSlotsByName(self)
         self.connect(self.play, QtCore.SIGNAL('triggered()'),
                      self.player.play)
@@ -80,6 +74,7 @@ class MainWindow(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getOpenFileName(
             self, 'Open video ...', '', 'AVI Files (*.avi);;All files (*)')
         if filename:
+            # load (but don't play!) the given filename
             self.player.load(Phonon.MediaSource(filename))
 
 

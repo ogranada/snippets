@@ -47,7 +47,9 @@ class MyMainWindow(QMainWindow):
         central.setLayout(QVBoxLayout(central))
         self.edit = QLineEdit(central)
         central.layout().addWidget(self.edit)
+        # create a validator
         edit_validator = QDoubleValidator(self.edit)
+        # and add it to the edito widget
         self.edit.setValidator(edit_validator)
         self.setCentralWidget(central)
         self.connect(self.edit, SIGNAL('returnPressed()'),

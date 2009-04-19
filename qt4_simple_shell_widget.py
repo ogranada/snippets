@@ -20,6 +20,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+
+"""
+    qt4_simple_shell_widget
+    =======================
+
+    A *very* simple shell widget using QProcess.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 import sys
 
 from PyQt4.QtCore import QProcess, QString, SIGNAL

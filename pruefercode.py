@@ -1,11 +1,31 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Copyright (c) 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
+# This program is free software. It comes without any warranty, to
+# the extent permitted by applicable law. You can redistribute it
+# and/or modify it under the terms of the Do What The Fuck You Want
+# To Public License, Version 2, as published by Sam Hocevar. See
+# http://sam.zoy.org/wtfpl/COPYING for more details.
+
+
+"""
+    pruefercode
+    ===========
+
+    Implements two different algorithms to create a graph (as sequence of
+    tuples of linked nodes) from a Prüfer sequence.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
 
 from pprint import pprint
 
 
 def code2tree(code):
+    """
+    This algorithm comes from Wikipedia.
+    """
     degree = {}
     for i in xrange(1, len(code) + 3):
         degree[i] = 1
@@ -23,6 +43,10 @@ def code2tree(code):
 
 
 def code2tree_steger(code):
+    """
+    This algorithm comes from a text book, dealing with discrete structure
+    mathematics.
+    """
     tree = set()
     s = set()
     n = set(xrange(1, len(code) + 3))
@@ -37,7 +61,7 @@ def code2tree_steger(code):
 
 def main():
     code = [2, 3, 5, 5, 3, 7, 10, 8, 10]
-    #pprint(code2tree(code))
+    pprint(code2tree(code))
     pprint(code2tree_steger(code))
 
 

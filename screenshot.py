@@ -9,6 +9,16 @@
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
+"""
+    screenshot
+    ==========
+
+    Demonstrates how to take screenshots based on the window name on X11.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 import sys
 import re
 import subprocess
@@ -27,14 +37,17 @@ def take_screenshot(window_name):
     :returns: Screenshot as PNG or None, if no window was found
     :returntype: str
     """
+    # call xwininfo to get the window id of the window with the given name
     proc = subprocess.Popen(['xwininfo', '-name', window_name],
                             stdout=subprocess.PIPE)
     stdout = proc.communicate()[0]
     if proc.returncode != 0:
         return None
+    # extract the window id
     match = XWININFO_ID_PATTERN.search(stdout)
     if not match:
         raise ValueError('Could not extract window ID')
+    # use import to take a screenshot
     proc = subprocess.Popen(['import', '-window', match.group(1), 'png:-'],
                             stdout=subprocess.PIPE)
     return proc.communicate()[0]
@@ -56,7 +69,6 @@ def main():
             stream.write(shot)
     else:
         sys.stdout.write(shot)
-
 
 
 if __name__ == '__main__':

@@ -21,6 +21,16 @@
 # DEALINGS IN THE SOFTWARE.
 
 
+"""
+    qt4_countdown
+    =============
+
+    A little countdown clock implemented with QTime and QTimer.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 import sys
 
 from PyQt4.QtCore import Qt, SIGNAL, QTime, QTimer
@@ -31,18 +41,24 @@ class CountdownWidget(QLabel):
     def __init__(self, countdown, parent=None):
         QLabel.__init__(self, parent)
         self.countdown = countdown
-        self.timer = QTimer(self)
         self.setText(self.countdown.toString(Qt.ISODate))
+        # setup the countdown timer
+        self.timer = QTimer(self)
         self.connect(self.timer, SIGNAL('timeout()'),
                      self._update)
 
     def start(self):
+        # update the display every second
         self.timer.start(1000)
 
     def _update(self):
+        # this gets called every seconds
+        # adjust the remaining time
         self.countdown = self.countdown.addSecs(-1)
+        # if the remaining time reached zero, stop the timer
         if self.countdown <= QTime(0, 0, 0):
             self.timer.stop()
+        # update the display
         self.setText(self.countdown.toString(Qt.ISODate))
 
 

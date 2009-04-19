@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
 # and/or modify it under the terms of the Do What The Fuck You Want
 # To Public License, Version 2, as published by Sam Hocevar. See
 # http://sam.zoy.org/wtfpl/COPYING for more details.
+
 
 """
     A simple Qt4 socket example
@@ -21,11 +22,9 @@
     If started with ``-c`` or ``--client`` option, a little client shell is
     spawn.  It requires a running server.
 
-    :author: Sebastian Wiesner
-    :contact: basti.wiesner@gmx.net
-    :copyright: 2008 by Sebastian Wiesner
-    :license: WTFPL
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
 """
+
 
 from __future__ import with_statement
 

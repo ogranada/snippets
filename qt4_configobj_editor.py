@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2008 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,7 @@ import validate
 from configobj import ConfigObj
 from PyQt4 import QtCore, QtGui
 
-# indicates no default value
+# indicates a missing default value
 NoDefault = type('NoDefault', (object,),
                  {'__nonzero__': lambda self: False,
                   '__str__': lambda self: ''})()

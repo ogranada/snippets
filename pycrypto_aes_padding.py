@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-#
-# pycrypt AES extended with random bit padding
 # Copyright (c) 2007 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # This program is free software. It comes without any warranty, to

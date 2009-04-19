@@ -1,11 +1,22 @@
 # -*- encoding: utf-8 -*-
-# Copyright (c) 2007 Sebastian Wiesner <basti.wiesner@gmx.net>
+x# Copyright (c) 2007, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
 # and/or modify it under the terms of the Do What The Fuck You Want
 # To Public License, Version 2, as published by Sam Hocevar. See
 # http://sam.zoy.org/wtfpl/COPYING for more details.
+
+
+"""
+    advanced_readline_usage
+    =======================
+
+    What you can do with readline!
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
 
 from __future__ import with_statement
 
@@ -29,10 +40,14 @@ class FilenameCompleter(object):
         self.matches = []
 
     def __enter__(self):
+        # store the old values
         self.cmpl_function = readline.get_completer()
         self.delims = readline.get_completer_delims()
+        # no completion delimiters
         readline.set_completer_delims('')
+        # this class works as completer
         readline.set_completer(self)
+        # tab completes
         readline.parse_and_bind('tab: complete')
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -43,6 +58,7 @@ class FilenameCompleter(object):
 
     def calculate_matches(self, text):
         """Calculates all matches for `text`"""
+        # return all files starting with the typed text
         dirname = os.path.dirname(text)
         filename =  os.path.basename(text)
         completed = [os.path.join(dirname, f)
@@ -54,8 +70,11 @@ class FilenameCompleter(object):
         """Invoked successivly with increasing state number until it returns
         None. If state is 0, all completions are recalculated"""
         if state == 0:
+            # initialize the state for the given text
             self.matches = self.calculate_matches(text)
         try:
+            # return consecutive matches (happens, if the user presses tab
+            # multiple times without changing the text, she typed)
             return self.matches[state]
         except IndexError:
             return None
@@ -75,12 +94,15 @@ class readline_insert(object):
         self.value = value
 
     def __enter__(self):
+        # store the old value
         self.old_hook = readline.set_pre_input_hook(self.input_hook)
 
     def __exit__(self, exc_type, exc_value, traceback):
+        # restore the old value
         readline.set_pre_input_hook(self.old_hook)
 
     def input_hook(self):
+        # insert the given text just right before the input prompt is displayed.
         readline.insert_text(self.value)
         readline.redisplay()
 
