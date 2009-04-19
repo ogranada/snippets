@@ -22,6 +22,7 @@ class MyMainWindow(QtGui.QMainWindow):
 
     @QtCore.pyqtSignature('')
     def on_shot_button_clicked(self):
+        # using import from ImageMagick
         # proc = subprocess.Popen(
         #     ['import', '-silent', '-window', str(self.winId()), 'png:-'],
         #     stdout=subprocess.PIPE)
@@ -29,7 +30,8 @@ class MyMainWindow(QtGui.QMainWindow):
         # image = QtGui.QImage()
         # image.loadFromData(stdout)
         # self.image_label.setPixmap(QtGui.QPixmap.fromImage(image))
-        # richtiger Weg
+
+        # correct way!
         self.image_label.setPixmap(QtGui.QPixmap.grabWidget(self))
 
 

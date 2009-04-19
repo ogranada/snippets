@@ -36,6 +36,7 @@ def main():
     else:
         print generate_password(length)
 
+
 if __name__ == '__main__':
     try:
         main()
