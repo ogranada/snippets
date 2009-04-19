@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 
 from pprint import pprint
 
@@ -29,7 +28,6 @@ def code2tree_steger(code):
     n = set(xrange(1, len(code) + 3))
     for i, t in enumerate(code):
         s_i = min(e for e in (n - s) if e not in code[i:])
-        print('t   = {0[t]}\ns_i = {0[s_i]}'.format(locals()))
         tree.add((s_i, t))
         pprint(tree)
         s.add(s_i)
