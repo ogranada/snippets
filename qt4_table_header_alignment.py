@@ -34,9 +34,7 @@
 
 import sys
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
+from PyQt4 import QtCore, QtGui
 
 DATA = [
     ['foo', 'bar'],
@@ -44,7 +42,7 @@ DATA = [
     ]
 
 
-class TableModel(QAbstractTableModel):
+class TableModel(QtCore.QAbstractTableModel):
 
     def rowCount(self, parent):
         return len(DATA)
@@ -53,42 +51,42 @@ class TableModel(QAbstractTableModel):
         return len(DATA[0])
 
     def headerData(self, section, orientation, role):
-        if orientation != Qt.Horizontal:
-            return QVariant()
-        if role == Qt.DisplayRole:
-            return QVariant('No {0}'.format(section))
-        elif role == Qt.TextAlignmentRole:
-            return QVariant(Qt.AlignRight)
+        if orientation != QtCore.Qt.Horizontal:
+            return QtCore.QVariant()
+        if role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant('No {0}'.format(section))
+        elif role == QtCore.Qt.TextAlignmentRole:
+            return QtCore.QVariant(QtCore.Qt.AlignRight)
         else:
-            return QVariant()
+            return QtCore.QVariant()
 
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
-            return QVariant(DATA[index.row()][index.column()])
-        elif role == Qt.TextAlignmentRole:
-            return QVariant(Qt.AlignCenter)
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(DATA[index.row()][index.column()])
+        elif role == QtCore.Qt.TextAlignmentRole:
+            return QtCore.QVariant(QtCore.Qt.AlignCenter)
         else:
-            return QVariant()
+            return QtCore.QVariant()
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent)
+        super(QtGui.QMainWindow, self).__init__(parent)
         self.setup_ui()
 
     def setup_ui(self):
-        splitter = QSplitter(self)
-        left = QWidget(splitter)
-        left.setLayout(QVBoxLayout(left))
-        left.layout().addWidget(QLabel('QTableView', left))
-        tableview = QTableView(left)
+        splitter = QtGui.QSplitter(self)
+        left = QtGui.QWidget(splitter)
+        left.setLayout(QtGui.QVBoxLayout(left))
+        left.layout().addWidget(QtGui.QLabel('QTableView', left))
+        tableview = QtGui.QTableView(left)
         tableview.setModel(TableModel(tableview))
         left.layout().addWidget(tableview)
         splitter.addWidget(left)
-        right = QWidget(splitter)
-        right.setLayout(QVBoxLayout(right))
-        right.layout().addWidget(QLabel('QTableWidget', right))
-        tablewidget = QTableWidget(len(DATA), len(DATA[1]), right)
+        right = QtGui.QWidget(splitter)
+        right.setLayout(QtGui.QVBoxLayout(right))
+        right.layout().addWidget(QtGui.QLabel('QTableWidget', right))
+        tablewidget = QtGui.QTableWidget(len(DATA), len(DATA[1]), right)
         right.layout().addWidget(tablewidget)
         splitter.addWidget(right)
         self.setCentralWidget(splitter)
@@ -99,22 +97,22 @@ class MainWindow(QMainWindow):
     def add_data(self, widget):
         # delete vertical headers
         for i in xrange(widget.rowCount()):
-            widget.setVerticalHeaderItem(i, QTableWidgetItem())
+            widget.setVerticalHeaderItem(i, QtGui.QTableWidgetItem())
         # set horizontal headers
         for i in xrange(widget.columnCount()):
-            item = QTableWidgetItem('No {0}'.format(i))
-            item.setTextAlignment(Qt.AlignRight)
+            item = QtGui.QTableWidgetItem('No {0}'.format(i))
+            item.setTextAlignment(QtCore.Qt.AlignRight)
             widget.setHorizontalHeaderItem(i, item)
         # set data
         for y, row in enumerate(DATA):
             for x, cell in enumerate(row):
-                item = QTableWidgetItem(cell)
-                item.setTextAlignment(Qt.AlignCenter)
+                item = QtGui.QTableWidgetItem(cell)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
                 widget.setItem(y, x, item)
 
 
 def main():
-    app = QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
     mainwindow = MainWindow()
     mainwindow.show()
     app.exec_()

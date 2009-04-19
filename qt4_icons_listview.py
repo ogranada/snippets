@@ -4,47 +4,46 @@
 import os
 import sys
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4 import QtCore, QtGui
 
 
-class Model(QAbstractListModel):
+class Model(QtCore.QAbstractListModel):
     def __init__(self, pages, parent=None):
-        QAbstractListModel.__init__(self, parent)
+        super(QtCore.QAbstractListModel, self).__init__(parent)
         self.pages = pages
 
-    def data(self, index, role=Qt.DisplayRole):
+    def data(self, index, role=QtCore.Qt.DisplayRole):
         if index.isValid():
             name, icon = self.pages[index.row()]
-            if role == Qt.DisplayRole:
-                return QVariant(name)
-            elif role == Qt.DecorationRole and icon:
-                return QVariant(icon)
-        return QVariant()
+            if role == QtCore.Qt.DisplayRole:
+                return QtCore.QVariant(name)
+            elif role == QtCore.Qt.DecorationRole and icon:
+                return QtCore.QVariant(icon)
+        return QtCore.QVariant()
 
     def rowCount(self, index):
         return len(self.pages)
 
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent)
+        super(QtGui.QMainWindow, self).__init__(parent)
         self.setup_ui()
 
     def find_icon(self, name):
         path = os.path.join(
             '/usr/share/icons/oxygen/scalable/categories', name + '.svgz')
         if os.path.isfile(path):
-            return QIcon(path)
+            return QtGui.QIcon(path)
         else:
             return None
 
     def setup_ui(self):
-        view = QListView(self)
-        view.setViewMode(QListView.IconMode)
-        view.setMovement(QListView.Static)
-        view.setIconSize(QSize(64, 64))
+        view = QtGui.QListView(self)
+        view.setViewMode(QtGui.QListView.IconMode)
+        view.setMovement(QtGui.QListView.Static)
+        view.setIconSize(QtCore.QSize(64, 64))
         pages = [
             ('System', self.find_icon('preferences-system')),
             ('Desktop', self.find_icon('preferences-desktop-personal'))]
@@ -54,7 +53,7 @@ class MainWindow(QMainWindow):
 
 
 def main():
-    app = QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
     window = MainWindow()
     window.show()
     app.exec_()
