@@ -8,18 +8,81 @@
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
+"""
+    repoze_what_example
+    ===================
+
+    Demonstrates how to use repoze.what-quickstart together with repoze.who
+    to authenticate and authorize users of a web application against a
+    SQLAlchemy-wrapped database using a classic web form login with a secure
+    session cookie.
+
+    This example uses:
+
+    - Werkzeug as WSGI wrapper
+    - SQLAlchemy for database access
+    - repoze.who as authentication library
+    - repoze.what as authorization library
+    - repoze.who.plugins.sa to provide database-backed authentication
+    - repoze.who-friendlyform to provide a powerful web form login
+    - repoze.what.plugins.sql to provide database-backed authorization
+    - repoze.what-quickstart for easy setup of the above
+
+    All of the above can be installed through ``easy_install``::
+
+       easy_install werkzeug sqlalchemy repoze.who repoze.what repoze.what-quickstart
+
+    When all dependencies are installed, the following command will spawn a
+    little testing webserver at http://localhost:5000::
+
+       python repoze_what_example.py serve
+
+    The interactive debugger is enabled, to ease debugging when
+    experimenting with this example.
+
+    The server will provide four simple pages without any fancy styling:
+
+    - http://localhost:5000 – Provides a link to the login form or the
+      logout url (depending on the login state) and links to
+      http://localhost:5000/need_permission and to
+      http://localhost:5000/need_login.  -
+    - http://localhost:5000/need_permission – A page, which requires the
+      user to be logged in and have the "administer" permission.
+    - http://localhost:5000/need_login – A page, which requires the user to
+      be logged in.
+    - http://localhost:5000/logout – Logs the user out and redirects to
+      the former page.
+
+    Two user accounts are available for testing:
+
+    - "admin" – A user which is member of the "admins"-Group and thus has
+      the "administer" permission.
+    - "user" – A simple user with no special permissions.  This user will
+      trigger a 403 Forbidden error on
+      http://localhost:5000/need_permission.
+
+    Both accounts use "password" as password.
+
+    The database will be stored in the file :file:`repoze_what_example.db`
+    in the current working directory.  Initially the required database
+    tables will be created.  If the database already exists, all tables will
+    be dropped first.
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 from functools import wraps
 
 from werkzeug import (Response, Request, ClosingIterator, Template,
                       Local, LocalManager, script, redirect, Href)
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, Forbidden, Unauthorized
-from repoze.what.plugins.quickstart import setup_sql_auth
-
 from sqlalchemy import (MetaData, create_engine, Table, Column, Integer,
                         String, ForeignKey)
 from sqlalchemy.orm import scoped_session, sessionmaker, relation
 from sqlalchemy.ext.declarative import declarative_base
+from repoze.what.plugins.quickstart import setup_sql_auth
 from repoze.what.predicates import (NotAuthorizedError, not_anonymous,
                                     has_permission)
 
@@ -27,7 +90,7 @@ from repoze.what.predicates import (NotAuthorizedError, not_anonymous,
 # sqlalchemy classes and instances
 metadata = MetaData()
 # a in-memory database for users
-engine = create_engine('sqlite:///database.db')
+engine = create_engine('sqlite:///repoze_what_example.db')
 session = scoped_session(sessionmaker(bind=engine))
 
 # base class for models
