@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-x# Copyright (c) 2007, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2007, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -18,10 +18,7 @@ x# Copyright (c) 2007, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 """
 
 
-from __future__ import with_statement
-
-
-import os.path
+import os
 import shutil
 import readline
 
@@ -30,12 +27,13 @@ ERROR_PREFIX = '### ERROR ###'
 
 
 class FilenameCompleter(object):
-    """Filename completer for readline.
-    Supports with statement::
+    """
+    Filename completer for readline::
 
         with FilenameCompleter():
             print raw_input('Enter a filename: ')
     """
+
     def __init__(self):
         self.matches = []
 
@@ -67,8 +65,11 @@ class FilenameCompleter(object):
         return completed
 
     def complete(self, text, state):
-        """Invoked successivly with increasing state number until it returns
-        None. If state is 0, all completions are recalculated"""
+        """
+        Invoked by readline to calculate completions for the current text.
+        If ``state`` is 0, all matches are calculated, otherwise the proper
+        match for the given state is returned.
+        """
         if state == 0:
             # initialize the state for the given text
             self.matches = self.calculate_matches(text)
@@ -84,8 +85,8 @@ class FilenameCompleter(object):
 
 
 class readline_insert(object):
-    """A class which provides a facility to insert text to the command
-    line. Intend for you with the ``with`` statement::
+    """
+    Class to safely insert text into the input line::
 
         with readline_insert('foo'):
             print raw_input('Your Name is: ')
@@ -117,8 +118,10 @@ def backup_file(filename):
 
 
 def edit_lines(lines):
-    """Edit a list of lines *inplace*. Returns a tupel containing
-    the edited lines and the number of lines edited"""
+    """
+    Edit a list of lines *inplace*. Returns a tupel containing the edited
+    lines and the number of lines edited.
+    """
     edit_counter = 0
     for ln, line in enumerate(lines):
         with readline_insert(line):
@@ -130,10 +133,11 @@ def edit_lines(lines):
 
 
 def edit_text_file():
-    """for a filename, shows the content and allows to edit the content
-    line by line"""
+    """
+    Asks for a filename and interactively edits this text file.
+    """
     with FilenameCompleter():
-        filename = raw_input('Please enter a file name to edit: ')
+        filename = raw_input('Please enter a file name to edit: ').strip()
 
     filename = os.path.expanduser(filename)
     if not filename:
@@ -151,8 +155,8 @@ def edit_text_file():
     content, edit_count = edit_lines(content)
 
     if edit_count:
-        print "You have made %d changes." % edit_count
-        choice = raw_input("Do you want to save this changes (y,Y): ")
+        print 'You have made %d changes.' % edit_count
+        choice = raw_input('Save changes (y,Y): ')
         if choice.lower() == 'y':
             try:
                 with open(filename, 'w') as outstream:
