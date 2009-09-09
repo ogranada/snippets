@@ -21,6 +21,27 @@
 # DEALINGS IN THE SOFTWARE.
 
 
+"""
+    hal_touchpad_daemon
+    ===================
+
+    Disables a synpatics touchpad, if an external mouse is
+    plugged in.
+
+    This script forks into background automatically.  Use the DBus interface
+    to kill it::
+
+       dbus-send --session --dest='de.lunaryorn.TouchpadDaemon' --type=method_call /de/lunaryorn/TouchpadDaemon de.lunaryorn.TouchpadDaemon.Quit
+
+    or simplier::
+
+       qdbus --session de.lunaryorn.TouchpadDaemon /de/lunaryorn/TouchpadDaemon de.lunaryorn.TouchpadDaemon.Quit
+
+
+    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+"""
+
+
 import os
 import sys
 import shlex
