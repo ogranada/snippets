@@ -22,8 +22,8 @@
 
 
 """
-    qt4_phonon
-    ==========
+    qt4_phonon_video
+    ================
 
     Implementation of a simple video player using the Qt4 phonon multimedia
     framework.
