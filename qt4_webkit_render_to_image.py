@@ -48,13 +48,11 @@ class ImageRenderer(QObject):
 
     def __init__(self, url, image_path):
         QObject.__init__(self)
-        if not isinstance(url, QUrl):
-            url = QUrl(url)
-        self.url = url
+        self.url = QUrl(url)
         self.image_path = image_path
         self.webpage = QWebPage(self)
         self.webpage.loadFinished.connect(self.render)
-        self.webpage.mainFrame().load(url)
+        self.webpage.mainFrame().load(self.url)
 
     def render(self, ok):
         if ok:
