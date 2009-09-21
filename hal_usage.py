@@ -22,6 +22,8 @@
 
 
 import sys
+from functools import partial
+
 import dbus
 
 
@@ -39,8 +41,7 @@ def list_devices(list_removable=False):
     for device in devices:
         # get the device object
         device = dbus.Interface(
-            get_object('org.freedesktop.Hal', device),
-            dbus_interface='org.freedesktop.Hal.Device')
+            get_object(device), dbus_interface='org.freedesktop.Hal.Device')
         # check if the disk is removable
         removable = device.GetPropertyBoolean('storage.removable')
         if not removable or list_removable:
