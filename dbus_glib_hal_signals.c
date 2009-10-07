@@ -147,6 +147,8 @@ void device_added(DBusGProxy *manager, gchar *udi, DBusGConnection *bus) {
             if (error)
                 goto unwind;
             g_print("\tProduct name: %s\n", name);
+        } else {
+            g_print("\tThe device has no name\n");
         }
     }
 unwind:
