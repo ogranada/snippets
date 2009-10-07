@@ -80,11 +80,35 @@ gboolean device_property_exists(DBusGProxy *device, gchar *property,
  */
 gchar *device_get_property_string(DBusGProxy *device, gchar *property,
                                   GError **error) {
-    gchar *value = 0;
+    gchar *value = NULL;
     dbus_g_proxy_call(device, "GetPropertyString", error,
                       G_TYPE_STRING, property, G_TYPE_INVALID,
                       G_TYPE_STRING, &value, G_TYPE_INVALID);
     return value;
+}
+
+
+/**
+ * @brief Query a @p capability of @p device.
+ *
+ * Capabilities inform about what a device can do.  Mouse devices have the
+ * "input.touchpad" capability, volumes on removable media have "volume" and
+ * "block" capabilities, whereas the removable device itself has "storage"
+ * and "block" capabilities.
+ *
+ * @param device the device
+ * @param capability the capability to query
+ * @param error a GError pointer set in case of errors
+ * @return @c TRUE, if the @p device has the @p capability, @c FALSE
+ *         otherwise
+ */
+gboolean device_query_capability(DBusGProxy *device, gchar *capability,
+                                 GError **error) {
+    gboolean has_capability = FALSE;
+    dbus_g_proxy_call(device, "QueryCapability", error,
+                      G_TYPE_STRING, capability, G_TYPE_INVALID,
+                      G_TYPE_BOOLEAN, &has_capability, G_TYPE_INVALID);
+    return has_capability;
 }
 
 
@@ -96,24 +120,38 @@ gchar *device_get_property_string(DBusGProxy *device, gchar *property,
  * @param bus the bus connection
  */
 void device_added(DBusGProxy *manager, gchar *udi, DBusGConnection *bus) {
-    GError *error = 0;
-    g_print("%s connected\n", udi);
+    GError *error = NULL;
+    gchar *name = NULL;
+    gboolean is_volume = FALSE;
+    gboolean is_block = FALSE;
     /* get the dbus object for the added device */
     DBusGProxy *device = dbus_g_proxy_new_for_name(bus, HAL_NAME, udi,
                                                    HAL_DEVICE_IFACE);
-    /* print the product name of the device, if it has one.  Use the
-       hal-device command to list properties of devices. */
-    if (device_property_exists(device, "info.product", &error)) {
-        if (error)
-            goto unwind;
-        gchar *name = device_get_property_string(device, "info.product",
-                                                 &error);
-        if (error)
-            goto unwind;
-        g_print("\tProduct name: %s\n", name);
+
+    g_print("device with id %s connected.\n", udi);
+    is_volume = device_query_capability(device, "volume", &error);
+    if (error)
+        goto unwind;
+    is_block = device_query_capability(device, "block", &error);
+    if (error)
+        goto unwind;
+    if (is_volume && is_block) {
+        g_print("\tThe device is a storage volume.\n");
+        /* print the product name of the device, if it has one.  Use the
+           hal-device command to list properties of devices. */
+        if (device_property_exists(device, "info.product", &error)) {
+            if (error)
+                goto unwind;
+            name = device_get_property_string(device, "info.product",
+                                              &error);
+            if (error)
+                goto unwind;
+            g_print("\tProduct name: %s\n", name);
+        }
     }
 unwind:
     /* cleanup */
+    g_free(name);
     if (device)
         g_object_unref(device);
     if (error) {
@@ -124,10 +162,10 @@ unwind:
 
 
 int main(void) {
-    DBusGConnection *bus = 0;
-    GError *error = 0;
-    DBusGProxy *manager = 0;
-    GMainLoop *mainloop = 0;
+    DBusGConnection *bus = NULL;
+    GError *error = NULL;
+    DBusGProxy *manager = NULL;
+    GMainLoop *mainloop = NULL;
 
     /* initialize the GObject type system.  Mandatory for every Glib
      * program */
@@ -154,7 +192,7 @@ int main(void) {
      * invocation.  We use this to pass the bus connection to the signal
      * handler. */
     dbus_g_proxy_connect_signal(manager, "DeviceAdded",
-                                G_CALLBACK(device_added), bus, 0);
+                                G_CALLBACK(device_added), bus, NULL);
 
     /* create and run the main loop to handle incoming signals */
     mainloop = g_main_loop_new(NULL, FALSE);
