@@ -11,7 +11,7 @@
 /**
  * @file
  *
- * This file demonstrates the usage of hal signals using dbus-glib.
+ * Demonstrates the connection to HAL signals using C and dbus-glib.
  */
 
 #include <dbus/dbus-glib.h>
@@ -124,11 +124,13 @@ void device_added(DBusGProxy *manager, gchar *udi, DBusGConnection *bus) {
     gchar *name = NULL;
     gboolean is_volume = FALSE;
     gboolean is_block = FALSE;
-    /* get the dbus object for the added device */
+    /* get the dbus object for the new device */
     DBusGProxy *device = dbus_g_proxy_new_for_name(bus, HAL_SERVICE, udi,
                                                    HAL_DEVICE_IFACE);
 
     g_print("device with id %s connected.\n", udi);
+    /* check the capabilities of the device, only volumes on block devices
+     * are handled. */
     is_volume = device_query_capability(device, "volume", &error);
     if (error)
         goto unwind;
@@ -181,7 +183,7 @@ int main(void) {
         goto unwind;
 
     /* get the hal manager object.  This object maintains a list of all
-     * connected devices and notifies clients about changes. */
+     * devices and notifies clients about changes. */
     manager = dbus_g_proxy_new_for_name(bus, HAL_SERVICE, HAL_MANAGER_PATH,
                                         HAL_MANAGER_IFACE);
     /* inform the GObject signal subsystem about the signature of the
