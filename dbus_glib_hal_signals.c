@@ -18,9 +18,9 @@
 
 
 /** the bus name of HAL */
-static const char HAL_NAME[] = "org.freedesktop.Hal";
+static const char HAL_SERVICE[] = "org.freedesktop.Hal";
 /** the object path of the HAL Manager */
-static const char HAL_MANAGER[] = "/org/freedesktop/Hal/Manager";
+static const char HAL_MANAGER_PATH[] = "/org/freedesktop/Hal/Manager";
 /** the manager interface */
 static const char HAL_MANAGER_IFACE[] = "org.freedesktop.Hal.Manager";
 /** the device interface */
@@ -125,7 +125,7 @@ void device_added(DBusGProxy *manager, gchar *udi, DBusGConnection *bus) {
     gboolean is_volume = FALSE;
     gboolean is_block = FALSE;
     /* get the dbus object for the added device */
-    DBusGProxy *device = dbus_g_proxy_new_for_name(bus, HAL_NAME, udi,
+    DBusGProxy *device = dbus_g_proxy_new_for_name(bus, HAL_SERVICE, udi,
                                                    HAL_DEVICE_IFACE);
 
     g_print("device with id %s connected.\n", udi);
@@ -182,7 +182,7 @@ int main(void) {
 
     /* get the hal manager object.  This object maintains a list of all
      * connected devices and notifies clients about changes. */
-    manager = dbus_g_proxy_new_for_name(bus, HAL_NAME, HAL_MANAGER,
+    manager = dbus_g_proxy_new_for_name(bus, HAL_SERVICE, HAL_MANAGER_PATH,
                                         HAL_MANAGER_IFACE);
     /* inform the GObject signal subsystem about the signature of the
      * DeviceAdded signal.  This is required for proper unmarshalling of

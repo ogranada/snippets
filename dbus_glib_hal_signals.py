@@ -18,14 +18,14 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 
-HAL_NAME = 'org.freedesktop.Hal'
-HAL_MANAGER = '/org/freedesktop/Hal/Manager'
+HAL_SERVICE = 'org.freedesktop.Hal'
+HAL_MANAGER_PATH = '/org/freedesktop/Hal/Manager'
 HAL_MANAGER_IFACE = 'org.freedesktop.Hal.Manager'
 HAL_DEVICE_IFACE = 'org.freedesktop.Hal.Device'
 
 
 def device_added(bus, udi):
-    device = dbus.Interface(bus.get_object(HAL_NAME, udi),
+    device = dbus.Interface(bus.get_object(HAL_SERVICE, udi),
                             HAL_DEVICE_IFACE)
     print('device with id {0} connected.'.format(udi))
     if device.QueryCapability('volume') and device.QueryCapability('block'):
@@ -39,7 +39,7 @@ def device_added(bus, udi):
 
 def main():
     bus = dbus.SystemBus()
-    manager = dbus.Interface(bus.get_object(HAL_NAME, HAL_MANAGER),
+    manager = dbus.Interface(bus.get_object(HAL_SERVICE, HAL_MANAGER_PATH),
                              HAL_MANAGER_IFACE)
     manager.connect_to_signal('DeviceAdded', partial(device_added, bus))
 
