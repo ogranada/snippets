@@ -20,11 +20,6 @@ static const char HAL_DEVICE_IFACE[] = "org.freedesktop.Hal.Device";
 #include <QtDBus/QDBusReply>
 
 
-void printError(const QDBusError &error) {
-    qWarning() << error;
-}
-
-
 class Handler: public QObject {
     Q_OBJECT
 public:
@@ -68,7 +63,7 @@ void Handler::deviceAdded(const QString &udi) {
             }
         }
     } catch (const QDBusError &error) {
-        printError(error);
+        qWarning() << error;
     }
 }
 
