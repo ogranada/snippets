@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2009, 2010 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,7 @@
     hal_touchpad_daemon
     ===================
 
-    Disables a synpatics touchpad, if an external mouse is
-    plugged in.
+    Disables a synpatics touchpad, if an external mouse is plugged in.
 
     This script forks into background automatically.  Use the DBus interface
     to kill it::
