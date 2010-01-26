@@ -70,11 +70,10 @@ int main(int argc, char *argv[]) {
         struct udev_device *parent = udev_device_get_parent(device);
         // get the sysfs path of the parent device, to check, whether we
         // have already seen this device.
-        std::string sysfs_path =
-            udev_device_get_property_value(parent, "DEVPATH");
-        if (!mouse_devices.count(sysfs_path)) {
+        std::string dev_path = udev_device_get_devpath(parent);
+        if (!mouse_devices.count(dev_path)) {
             // the device was not yet handled, so remember it
-            mouse_devices.insert(sysfs_path);
+            mouse_devices.insert(dev_path);
             // print the device name
             cout << udev_device_get_property_value(parent, "NAME");
             // and check if its a touchpad
