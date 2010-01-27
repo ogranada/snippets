@@ -15,9 +15,10 @@ extern "C" {
 #include <libudev.h>
 }
 
-#include <QtNetwork/QLocalSocket>
+#include <QtCore/QSocketNotifier>
 #include <QtCore/QTextStream>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QByteArray>
 
 
 template<class T, T* (*Ref)(T*), void (*Unref)(T*)> class QUDevPointer {
@@ -50,6 +51,14 @@ public:
             Unref(this->m_ptr);
         this->m_ptr = ptr;
         return *this;
+    }
+
+    void ref() {
+        Ref(this->m_ptr);
+    }
+
+    void unref() {
+        Unref(this->m_ptr);
     }
 
     operator T*() const {
@@ -93,37 +102,48 @@ private:
 
     QUDevPtr context;
     QUDevMonitorPtr monitor;
-    QLocalSocket *udevSocket;
+    QSocketNotifier *monitorNotifier;
 };
 
 
 void QUDevClient::udevDataAvailable() {
     QTextStream out(stdout);
+
     QUDevDevicePtr device = udev_monitor_receive_device(this->monitor);
-    if (!device)
-        return;
-    const char *action = udev_device_get_action(device);
-    if (action) {
-        out << action << ": ";
+    if (device) {
+        QByteArray action = udev_device_get_action(device);
+        QByteArray isMouse = udev_device_get_property_value(
+            device, "ID_INPUT_MOUSE");
+        QByteArray sysName = udev_device_get_sysname(device);
+        if (isMouse == "1" && sysName.indexOf("mouse") == 0) {
+            QUDevDevicePtr parent = udev_device_get_parent(device);
+            // device pointer has no initial reference, so forcibly acquire
+            // a reference
+            parent.ref();
+            if (parent) {
+                QByteArray name = udev_device_get_property_value(parent,
+                                                                 "NAME");
+                if (!name.isEmpty()) {
+                    if (action == "add") {
+                        out << name << " added" << endl;
+                    } else if (action == "remove") {
+                        out << name << " removed" << endl;
+                    }
+                }
+            }
+        }
     }
-    out << udev_device_get_syspath(device);
-    const char *name = udev_device_get_property_value(device, "NAME");
-    if (name) {
-        out << " (" << name << ")";
-    }
-
-    out << endl;
 }
-
 
 QUDevClient::QUDevClient(QObject *parent): QObject(parent) {
     this->context = udev_new();
     this->monitor = udev_monitor_new_from_netlink(this->context, "udev");
+    udev_monitor_filter_add_match_subsystem_devtype(
+        this->monitor, "input", 0);
     udev_monitor_enable_receiving(this->monitor);
-    this->udevSocket = new QLocalSocket(this);
-    qDebug() << this->udevSocket->setSocketDescriptor(
-        udev_monitor_get_fd(this->monitor));
-    connect(this->udevSocket, SIGNAL(readyRead()),
+    this->monitorNotifier = new QSocketNotifier(
+        udev_monitor_get_fd(this->monitor), QSocketNotifier::Read, this);
+    connect(this->monitorNotifier, SIGNAL(activated(int)),
             this, SLOT(udevDataAvailable()));
 }
 

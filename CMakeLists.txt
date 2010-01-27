@@ -25,12 +25,17 @@ endif(PKG_CONFIG_FOUND)
 
 find_package(Qt4)
 if(QT_FOUND)
+  include_directories(${QT_INCLUDE_DIR})
   find_package(Automoc4 REQUIRED)
   if(AUTOMOC4_EXECUTABLE)
-    set(QT_DONT_USE_QTGUI 1)
-    set(QT_USE_QTDBUS 1)
-    include(${QT_USE_FILE})
     automoc4_add_executable(dbus_qt4_hal_signals dbus_qt4_hal_signals.cpp)
-    target_link_libraries(dbus_qt4_hal_signals ${QT_LIBRARIES})
+    target_link_libraries(dbus_qt4_hal_signals
+      ${QT_QTGUI_LIBRARY} ${QT_QTDBUS_LIBRARY})
   endif(AUTOMOC4_EXECUTABLE)
 endif(QT_FOUND)
+
+if(QT_FOUND AND LIBUDEV_FOUND)
+  automoc4_add_executable(udev_monitor udev_monitor.cpp)
+  target_link_libraries(udev_monitor
+    ${QT_QTCORE_LIBRARY} ${LIBUDEV_LIBRARIES})
+endif(QT_FOUND AND LIBUDEV_FOUND)
