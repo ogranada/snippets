@@ -16,7 +16,6 @@
  */
 
 #include <iostream>
-#include <tr1/unordered_set>
 
 extern "C" {
 #include <libudev.h>
@@ -25,20 +24,10 @@ extern "C" {
 
 int main(int argc, char *argv[]) {
     using namespace std;
-    using namespace std::tr1;
 
     // get us "connected" to the udev library.  This context is required for
     // all library operations.
     struct udev *context = udev_new();
-
-    // this set will remember all mouse devices, that we have already
-    // listed.  The problem is, that each physical mouse device is
-    // represented by two logical devices:  a "mouse" device and an "event"
-    // device.  Both share the same parent, which points to the actual
-    // device, but does not have any input-related properties.  Thus we have
-    // to use this set to disambiguate the devices and avoid listing
-    // the same device twice.
-    unordered_set<string> mouse_devices;
 
     // create a new "enumeration context".  We can gradually add matches or
     // nomatches for properties or subsystem or whatever (see documentation)
@@ -65,15 +54,14 @@ int main(int argc, char *argv[]) {
         // metadata
         struct udev_device *device = udev_device_new_from_syspath(
             context, udev_list_entry_get_name(current_entry));
-        // get the parent device.  This is the physical device, which we are
-        // interested in.
-        struct udev_device *parent = udev_device_get_parent(device);
-        // get the sysfs path of the parent device, to check, whether we
-        // have already seen this device.
-        std::string dev_path = udev_device_get_devpath(parent);
-        if (!mouse_devices.count(dev_path)) {
-            // the device was not yet handled, so remember it
-            mouse_devices.insert(dev_path);
+        // get the sysfs name of the device
+        string name = udev_device_get_sysname(device);
+        // check, if the device name starts with "mouse".  Only these are
+        // mouse devices (not, for instance, event devices)
+        if (name.find("mouse") == 0) {
+            // get the parent device.  This is the physical device, which we
+            // are interested in.
+            struct udev_device *parent = udev_device_get_parent(device);
             // print the device name
             cout << udev_device_get_property_value(parent, "NAME");
             // and check if its a touchpad
