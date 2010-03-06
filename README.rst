@@ -66,8 +66,6 @@ Snippets
 - ``qt4_window_screenshot.py``: takes a screenshot of window client area and
   displays the screenshot
 - ``qt4_xml_model.py``: demonstrates the powers of model classes in Qt4
-- ``repoze_what_example.py``: implements authentication and authorization
-  using repoze.what (additionally requires Werkzeug and SQLAlchemy)
 - ``screenshot.py``: uses ``xwininfo`` and ``import`` to take screenshots
   based on window titles
 - ``ssh_client.py``: demonstrates the use the paramiko API
