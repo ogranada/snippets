@@ -13,7 +13,7 @@
     onetimepad
     ==========
 
-    A simple one-time-pad implementation for Python 3 (>= 3.1).
+    A simple one-time-pad implementation for Python 3.
 
     Usage::
 
