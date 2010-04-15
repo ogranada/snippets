@@ -22,6 +22,7 @@ Snippets
   mouse devices.
 - ``kdialog_progressbar.bash``: demonstrates how to use the progress bar
   mode of ``kdialog``
+- ``magic_database.py``: demonstrates how to use libmagic from python
 - ``onetimepad.py``: simple one-time-pad for Python 3
 - ``ping.py``: the classic ``ping`` utility implemented in Python
 - ``posix_getch.c``: POSIX compatible implementation of the ``getch()``
