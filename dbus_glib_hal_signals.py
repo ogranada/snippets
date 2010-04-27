@@ -1,4 +1,4 @@
-# Copyright (c) 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -12,7 +12,7 @@
 
     Demonstrate the use of dbus to react to HAL events.
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 from __future__ import print_function, division

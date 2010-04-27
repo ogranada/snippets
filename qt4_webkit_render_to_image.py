@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@
 
     Requires PyQt 4.5 and Python 2.6.
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 

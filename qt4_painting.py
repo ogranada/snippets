@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 
     Uses the Qt4 painting engine to paint a rotating spiral onto a widget.
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 

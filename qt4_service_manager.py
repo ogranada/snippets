@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 
 
     :author: Sebastian Wiesner
-    :contact: basti.wiesner@gmx.net
+    :contact: lunaryorn@googlemail.com
     :copyright: 2008 by Sebastian Wiesner
     :license: MIT
 """

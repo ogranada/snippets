@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Copyright (c) 2010 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -22,7 +22,7 @@
         # decryption
         $ python3 onetimepad.py keyfile myfile.enc myfile
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
     A PoC-Widget which provides an interface to edit configobj sections.
 
     :author: Sebastian Wiesner
-    :contact: basti.wiesner@gmx.net
+    :contact: lunaryorn@googlemail.com
     :copyright: 2008 by Sebastian Wiesner
     :license: MIT
 """

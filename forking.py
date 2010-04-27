@@ -4,7 +4,7 @@
 # userserver.py: A sample rpc server. Shows concepts of implementing a rpc
 #                server, forking into background and giving up root
 #                privileges
-# Copyright (c) 2007 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2007 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it

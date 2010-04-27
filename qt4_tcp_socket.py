@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -22,7 +22,7 @@
     If started with ``-c`` or ``--client`` option, a little client shell is
     spawn.  It requires a running server.
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 

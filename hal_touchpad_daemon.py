@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009, 2010 Sebastian Wiesner <basti.wiesner@gmx.net>
+# Copyright (c) 2009, 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,7 @@
        qdbus --session de.lunaryorn.TouchpadDaemon /de/lunaryorn/TouchpadDaemon de.lunaryorn.TouchpadDaemon.Quit
 
 
-    .. moduleauthor::  Sebastian Wiesner  <basti.wiesner@gmx.net>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 
