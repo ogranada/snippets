@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2007, 2009 Sebastian Wiesner <basti.wiesner@gmx.net>
 
 # This program is free software. It comes without any warranty, to
