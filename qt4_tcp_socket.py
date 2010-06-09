@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2008-2010 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -16,158 +16,278 @@
     This snippet demonstrates the usage of the TCP socket classes of the
     QtNetwork module.
 
-    If started with ``-s`` or ``--server`` option, a new server is spawn,
-    which listens on 127.0.0.1:18888.
+    If started with ``-s`` or ``--server`` option, a new server is spawned,
+    which listens on 127.0.0.1:18888.  This server prints all received text
+    onto standard output.  To shutdown the server, send the string
+    ``'quit'`` to the server, for instance by using ``netcat``::
 
-    If started with ``-c`` or ``--client`` option, a little client shell is
-    spawn.  It requires a running server.
+       echo 'quit' | nc localhost 18888
+
+    If ``-s`` is not given, a graphical client is started.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
-
-from __future__ import with_statement
-
 import sys
-import textwrap
-from getopt import getopt
-from contextlib import closing
+from functools import partial
+from optparse import OptionParser
 
-from PyQt4 import QtCore, QtGui, QtNetwork
+from PyQt4.QtCore import pyqtSignal, QObject, QTextStream, QTextCodec
+from PyQt4.QtGui import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+                         QLineEdit, QPlainTextEdit, QAction, QStyle)
+from PyQt4.QtNetwork import QTcpSocket, QTcpServer, QHostAddress
 
 
-HOST_ADDRESS = QtNetwork.QHostAddress(QtNetwork.QHostAddress.LocalHost)
+HOST_ADDRESS = QHostAddress(QHostAddress.LocalHost)
 PORT = 18888
 
+def _stream_for_connection(connection):
+    """
+    Create a UTF_8 encoded text stream from the given ``connection``.
+    """
+    stream = QTextStream(connection)
+    stream.setCodec(QTextCodec.codecForName('utf-8'))
+    return stream
 
-class QSocketTestMainWindow(QtGui.QMainWindow):
 
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        self.setWindowTitle('Qt4 socket example')
-        # use QTextEdit in read only mode together with a document cursor to
-        # display incoming text.  In Qt 4.4 QPlainTextEdit could be used,
-        # which would simplify text handling.
-        self.text_display = QtGui.QTextEdit(self)
-        self.text_display.setLineWrapMode(QtGui.QTextEdit.NoWrap)
-        self.text_display.setReadOnly(True)
-        self.setCentralWidget(self.text_display)
-        self.document_cursor = QtGui.QTextCursor(
-            self.text_display.document())
-        # server to listen for incoming connections
-        self.server = QtNetwork.QTcpServer(self)
-        self.connect(self.server, QtCore.SIGNAL('newConnection()'),
-                     self.handle_connection)
-        # connections
+class ChatServer(QTcpServer):
+    """
+    Provide a simple plain text chat server.
+
+    The chat server will await incoming connections and forward text send by
+    a single client to all other clients (including the originating client).
+    The server will terminate, if it receives the string ``'quit'``, case
+    being ignored.
+    """
+
+    #: emitted if the server shuts down
+    serverShutdown = pyqtSignal()
+    #: emitted if the server receives text.  The text is given as argument
+    #to slots
+    textReceived = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # all currently connected clients
         self.connections = set()
+        # handle new clients
+        self.newConnection.connect(self._handle_incoming_connection)
 
-    def handle_connection(self):
-        """Called, if a new client connects."""
-        # handle all incoming connections
-        while self.server.hasPendingConnections():
-            connection = self.server.nextPendingConnection()
-            # destroy the sockets if gots disconnected
-            self.connect(connection, QtCore.SIGNAL('disconnected()'),
-                         connection, QtCore.SLOT('deleteLater()'))
-            # remove the socket from the internal list of connections, if it
-            # is destroyed
-            self.connect(connection, QtCore.SIGNAL('destroyed(QObject *)'),
-                         self.remove_connection)
-            # connect handler for incoming data
-            self.connect(connection, QtCore.SIGNAL('readyRead()'),
-                         self.read_data)
-            self.connections.add(connection)
+    def _handle_incoming_connection(self):
+        # get a socket for this newly incoming connection
+        connection = self.nextPendingConnection()
+        # delete the connection upon disconnect
+        connection.disconnected.connect(self._handle_disconnect)
+        # remove any deleted connection from our list of connections
+        connection.destroyed[QObject].connect(self.connections.remove)
+        # handle data incoming from this client
+        connection.readyRead.connect(self._handle_incoming_data)
+        self.connections.add(connection)
 
-    def remove_connection(self, connection):
-        """Remove `connection` from the internal connection list."""
-        self.connections.remove(connection)
+    def _handle_disconnect(self):
+        # delete our connection handle, if the client disconnects
+        connection = self.sender()
+        connection.deleteLater()
 
-    def read_data(self):
-        """Called to read data."""
-        # create a stream with proper encoding.  This gives us a QString
-        # instance directly without any conversion between Pythons builtins
-        # and QString
-        stream = QtCore.QTextStream(self.sender())
-        stream.setCodec(QtCore.QTextCodec.codecForName('utf-8'))
-        # move the the end of the document of the display widget
-        self.document_cursor.movePosition(QtGui.QTextCursor.End)
-        # and insert text with a final new line
-        self.document_cursor.insertText(stream.readAll())
-        self.document_cursor.insertText('\n')
-
-    def showEvent(self, evt):
-        if not self.server.isListening():
-            # start listening, if the main window is shown
-            listening = self.server.listen(HOST_ADDRESS, PORT)
-            if not listening:
-                QtGui.QMessageBox.critical(self, 'Server start failed',
-                                           self.server.errorString())
-        evt.accept()
-
-    def closeEvent(self, evt):
-        # close all connections and the server
-        for connection in self.connections:
-            connection.close()
-        self.server.close()
-        evt.accept()
-
-
-def start_server():
-    app = QtGui.QApplication(sys.argv)
-    QSocketTestMainWindow().show()
-    app.exec_()
-
-
-def start_client():
-    with closing(QtNetwork.QTcpSocket()) as socket:
-        socket.connectToHost(HOST_ADDRESS, PORT, QtCore.QIODevice.WriteOnly)
-        # wait five seconds for connection
-        connected = socket.waitForConnected(5000)
-        if not connected:
-            # if connection failed, print error and exit
-            print socket.errorString()
+    def _handle_incoming_data(self):
+        # read all data from the client
+        connection = self.sender()
+        text = _stream_for_connection(connection).readAll().strip()
+        self.textReceived.emit(text)
+        if text.lower() == 'quit':
+            # shut the server down
+            self.shutdown()
             return
-        while socket.state() == QtNetwork.QTcpSocket.ConnectedState:
-            # request input, as long as the socket is connected
-            try:
-                inp = raw_input('Enter a string (Strg+D, Strg+C to quit): ')
-                # decode input and send it utf-8-encoded to the server
-                socket.write(inp.decode(sys.stdin.encoding).encode('utf-8'))
-                # flush to make data appear at the server immediatly
-                socket.flush()
-            except (KeyboardInterrupt, EOFError):
-                print '\nGoing peacefully'
-                # exit
-                return
+        for connection in self.connections:
+            stream = _stream_for_connection(connection)
+            stream << text << '\n'
+
+    def shutdown(self):
+        """
+        Shut the chat server down.
+        """
+        # remove all connections
+        for connection in self.connections:
+            connection.disconnectFromHost()
+        # and tell anyone who cares, that we shutdown now
+        self.serverShutdown.emit()
+
+
+class ChatWidget(QWidget):
+    """
+    A chatting widget.
+    """
+
+    #: A notification (not chat!) message for the user
+    message = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setLayout(QVBoxLayout(self))
+        self.text_display = QPlainTextEdit(self)
+        self.text_display.setReadOnly(True)
+        self.layout().addWidget(self.text_display)
+        self.text_input = QLineEdit(self)
+        self.text_input.returnPressed.connect(self.send_text)
+        self.layout().addWidget(self.text_input)
+        QWidget.setTabOrder(self.text_input, self.text_display)
+        self.setEnabled(False)
+        self.message.emit('Not connected')
+        self._connection = None
+
+    @property
+    def connected(self):
+        """
+        ``True``, if this chat widget is connected to some server, ``False``
+        otherwise
+        """
+        return (self._connection and
+                self._connection.state() == QTcpSocket.ConnectedState)
+
+    @property
+    def connection(self):
+        """
+        The connection used by this widget.
+        """
+        return self._connection
+
+    @connection.setter
+    def connection(self, connection):
+        self._connection = connection
+        if not self.connected:
+            # wait for connection, if the connection isn't available yet
+            self._connection.connected.connect(self._enable_chat)
+        else:
+            self._enable_chat()
+        # handle errors, disconnects and incoming data
+        self._connection.error.connect(self._handle_error)
+        self._connection.disconnected.connect(self._handle_disconnect)
+        self._connection.readyRead.connect(self._receive_text)
+
+    def _enable_chat(self):
+        """
+        Enable the chat widget for chatting.
+        """
+        self.message.emit('connected')
+        self.setEnabled(True)
+        # remove all text from the previous connection
+        self.text_display.clear()
+
+    def _handle_disconnect(self):
+        """
+        Handle a disconnect.
+        """
+        self.message.emit('disconnected')
+        # disable the user interface
+        self.setEnabled(False)
+        # and disconnect from all slots and eventually delete the connection
+        # itself
+        self._connection.readyRead.disconnect(self._receive_text)
+        self._connection.deleteLater()
+        self._connection = None
+
+    def _handle_error(self):
+        self.message.emit(self._connection.errorString())
+
+    def _receive_text(self):
+        text = _stream_for_connection(self.connection).readAll()
+        self.text_display.insertPlainText('{0}'.format(text))
+
+    def send_text(self, text=None):
+        """
+        Send ``text`` over the connection of this widget.  Does nothing, if
+        the widget is not connected.
+
+        If ``text`` is ``None`` (the default), use the current input form
+        the user.
+        """
+        if self.connected:
+            stream = _stream_for_connection(self.connection)
+            if not text:
+                text = self.text_input.text()
+                self.text_input.clear()
+            stream << text
+
+
+class ChatWindow(QMainWindow):
+    """
+    The chat application window.
+    """
+    def __init__(self, parent=None):
+        super().__init__()
+        self.chat_widget = ChatWidget(self)
+        self.setCentralWidget(self.chat_widget)
+        # set up all actions
+        self.chat_widget.message.connect(self.statusBar().showMessage)
+        app_menu = self.menuBar().addMenu('&Application')
+        self.connect_action = QAction('&Connect', self)
+        self.connect_action.triggered.connect(self._connect)
+        self.connect_action.setShortcut('Ctrl+C')
+        app_menu.addAction(self.connect_action)
+        app_menu.addSeparator()
+        self.quit_server_action = QAction('Quit &server', self)
+        self.quit_server_action.triggered.connect(self._quit_server)
+        self.quit_server_action.setEnabled(False)
+        self.quit_server_action.setShortcut('Ctrl+D')
+        app_menu.addAction(self.quit_server_action)
+        quit_action = QAction(self.style().standardIcon(
+            QStyle.SP_DialogCloseButton), '&Quit', self)
+        quit_action.triggered.connect(QApplication.instance().quit)
+        quit_action.setShortcut('Ctrl+Q')
+        app_menu.addAction(quit_action)
+        # attempt to connect
+        self._connect()
+
+    def _quit_server(self):
+        if self.chat_widget.connected:
+            self.chat_widget.send_text('quit')
+
+    def _connect(self):
+        # connect to a server
+        if not self.chat_widget.connected:
+            self.chat_widget.connection = QTcpSocket()
+            # upon connection, disable the connect action, and enable the
+            # quit server action
+            self.chat_widget.connection.connected.connect(
+                partial(self.quit_server_action.setEnabled, True))
+            self.chat_widget.connection.connected.connect(
+                partial(self.connect_action.setDisabled, True))
+            # to the reverse thing upon disconnection
+            self.chat_widget.connection.disconnected.connect(
+                partial(self.connect_action.setEnabled, True))
+            self.chat_widget.connection.disconnected.connect(
+                partial(self.quit_server_action.setDisabled, True))
+            # connect to the chat server
+            self.chat_widget.connection.connectToHost(HOST_ADDRESS, PORT)
 
 
 def main():
-    optlist, args = getopt(sys.argv[1:], 'sch',
-                           ['server', 'client', 'help'])
-    if args:
-        sys.exit('This program does not unterstand arguments')
-    # parse options
-    client = server = False
-    for opt, arg in optlist:
-        if opt in ('-h', '--help'):
-            # print help and exit
-            print textwrap.dedent(__doc__)
-            return
-        elif opt in ('-c', '--client'):
-            client = True
-        elif opt in ('-s', '--server'):
-            server = True
-
-    if client and server:
-        print 'Cannot run in client and server mode.'
-        print 'Please choose one mode!'
-
-    if client:
-        start_client()
-    elif server:
-        start_server()
+    parser = OptionParser(
+        description='A chat client/server')
+    parser.add_option('-s', '--server', help='Start a server.  If not '
+                      'given, a client will be started',
+                      action='store_true')
+    opts, args = parser.parse_args()
+    if opts.server:
+        from PyQt4.QtCore import QCoreApplication
+        app = QCoreApplication(sys.argv)
+        # spawn a server
+        server = ChatServer()
+        listening = server.listen(HOST_ADDRESS, PORT)
+        if not listening:
+            # a server error
+            print('Server start failed: {}'.format(server.errorString()),
+                  file=sys.stderr)
+        server.serverShutdown.connect(app.quit)
+        # print everything received by the server to standard output
+        server.textReceived.connect(partial(print, '>>'))
     else:
-        print textwrap.dedent(__doc__)
+        app = QApplication(sys.argv)
+        chat_window = ChatWindow()
+        chat_window.show()
+
+    app.exec_()
+
 
 
 if __name__ == '__main__':
