@@ -33,6 +33,8 @@ Snippets
   module
 - ``pycrypto_aes_padding.py``: enhances the AES implementation of pycrypto
   with proper padding
+- ``qt4_checkable_filesystem_model.py``: ``QFileSystemModel``-derived model,
+  which adds checkboxes to file names
 - ``qt4_configobj_editor.py``: combines Qt4, configobj and validate to
   create a generic config editor based on the configspec feature of
   configobj
