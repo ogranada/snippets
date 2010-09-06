@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -34,58 +34,44 @@
 import os
 import sys
 
-from PyQt4 import QtCore, QtGui
+import sip
+sip.setapi('QVariant', 2)
+
+from PyQt4.QtCore import Qt, QSize, QAbstractListModel
+from PyQt4.QtGui import QApplication, QMainWindow, QListView, QIcon
 
 
-class Model(QtCore.QAbstractListModel):
+class IconModel(QAbstractListModel):
     def __init__(self, pages, parent=None):
-        super(QtCore.QAbstractListModel, self).__init__(parent)
+        QAbstractListModel.__init__(self, parent)
         self.pages = pages
 
-    def data(self, index, role=QtCore.Qt.DisplayRole):
+    def data(self, index, role=Qt.DisplayRole):
         if index.isValid():
             name, icon = self.pages[index.row()]
-            if role == QtCore.Qt.DisplayRole:
-                return QtCore.QVariant(name)
-            elif role == QtCore.Qt.DecorationRole and icon:
+            if role == Qt.DisplayRole:
+                return name
+            elif role == Qt.DecorationRole and icon:
                 # return an icon, if the decoration role is used
-                return QtCore.QVariant(icon)
-        return QtCore.QVariant()
+                return icon
+        return None
 
     def rowCount(self, index):
         return len(self.pages)
 
 
-
-class MainWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None):
-        super(QtGui.QMainWindow, self).__init__(parent)
-        self.setup_ui()
-
-    def find_icon(self, name):
-        path = os.path.join(
-            '/usr/share/icons/oxygen/scalable/categories', name + '.svgz')
-        if os.path.isfile(path):
-            return QtGui.QIcon(path)
-        else:
-            return None
-
-    def setup_ui(self):
-        view = QtGui.QListView(self)
-        view.setViewMode(QtGui.QListView.IconMode)
-        view.setMovement(QtGui.QListView.Static)
-        view.setIconSize(QtCore.QSize(64, 64))
-        pages = [
-            ('System', self.find_icon('preferences-system')),
-            ('Desktop', self.find_icon('preferences-desktop-personal'))]
-        model = Model(pages, self)
-        view.setModel(model)
-        self.setCentralWidget(view)
-
-
 def main():
-    app = QtGui.QApplication(sys.argv)
-    window = MainWindow()
+    app = QApplication(sys.argv)
+    window = QMainWindow()
+    view = QListView(window)
+    window.setCentralWidget(view)
+    view.setViewMode(QListView.IconMode)
+    view.setMovement(QListView.Static)
+    view.setIconSize(QSize(64, 64))
+    view.setModel(IconModel(
+        [('System', QIcon.fromTheme('preferences-system')),
+         ('Desktop', QIcon.fromTheme('preferences-desktop-personal'))],
+        view))
     window.show()
     app.exec_()
 
