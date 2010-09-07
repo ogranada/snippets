@@ -65,6 +65,8 @@ Snippets
   columns automatically, if the view is resized
 - ``qt4_tcp_socket.py``: illustrates the use of Qt4's tcp network
   facilities by implementing a very simple chat program
+- ``qt4_thread_progress.py``: demonstrates how to report the progress of
+  long-running background worker threads using QProgressBar and QThread
 - ``qt4_toolbar_in_tabs.py``: how to use toolbars within a QTabWidget (using
   a bit of dirty trick)
 - ``qt4_webkit_render_to_image.py``: render a website to an image file using
