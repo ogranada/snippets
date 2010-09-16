@@ -17,9 +17,6 @@ Snippets
 - ``easy_uninstall.py:``: PoC uninstall implementation for ``easy_install``
 - ``flatten_nested_lists.py``:  flattens nested lists in python
 - ``forking.py``: shows the classic unix double fork for daemonizing
-- ``hal_touchpad_daemon.py``:  disables a synaptics touchpad, if mouse
-  devices are plugged in.  The daemon listens on HAL to react on plugged
-  mouse devices.
 - ``kdialog_progressbar.bash``: demonstrates how to use the progress bar
   mode of ``kdialog``
 - ``magic_database.py``: demonstrates how to use libmagic from python
