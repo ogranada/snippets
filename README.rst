@@ -1,88 +1,200 @@
 Snippets
 ========
 
-- ``advanced_readline_usage.py``: demonstrates the usage of readline for
-  completion and line editing
-- ``CMakeLists.txt``: build instructions for all C and C++ sources
-- ``conftool.py``: implements a command-line configuration editor using
-  configobj
-- ``dbus_glib_hal_signals.c``: demonstrates DBus signal handling using the
-  dbus-glib bindings
-- ``dbus_glib_hal_signals.py``: demonstrates DBus signal handling using the
-  python-dbus (with glib as mainloop, which does however not really matter
-  in this case)
-- ``dbus_qt4_hal_signals.cpp``: demonstrates DBus signal handling using
-  QtDBus
-- ``du.py``: PoC ``du`` implementation (somewhere from usenet)
-- ``easy_uninstall.py:``: PoC uninstall implementation for ``easy_install``
-- ``flatten_nested_lists.py``:  flattens nested lists in python
-- ``forking.py``: shows the classic unix double fork for daemonizing
-- ``kdialog_progressbar.bash``: demonstrates how to use the progress bar
-  mode of ``kdialog``
-- ``magic_database.py``: demonstrates how to use libmagic from python
-- ``onetimepad.py``: simple one-time-pad for Python 3
-- ``ping.py``: the classic ``ping`` utility implemented in Python
-- ``posix_getch.c``: POSIX compatible implementation of the ``getch()``
-  function from Microsofts C APIs
-- ``pruefercode.py``: two different algorithms to calculate the Prüfer code
-  for graphs
-- ``pwgen.py``: password generator implemented in python using the random
-  module
-- ``pycrypto_aes_padding.py``: enhances the AES implementation of pycrypto
-  with proper padding
-- ``qt4_checkable_filesystem_model.py``: ``QFileSystemModel``-derived model,
-  which adds checkboxes to file names
-- ``qt4_configobj_editor.py``: combines Qt4, configobj and validate to
-  create a generic config editor based on the configspec feature of
-  configobj
-- ``qt4-countdown.py``: a simple PyQt4 countdown app
-- ``qt4_dbus_trayicon.py``: combines Qt4 and python-dbus to create a
-  remote-controllable, single-instance systray application
-- ``qt4_frameless_fullscreen.py``: shows how to create windows without
-  frames and in fullscreen mode using PyQt4
-- ``qt4_painiting.py``: demonstrates the use of the Qt4 painting API to
-  paint a rotating spiral
-- ``qt4_icons_listview.py``: how to display icons in a QListView
-- ``qt4_input_validation.py``: how to use QValidator subclasses for input
-  validation
-- ``qt4_phonon_audio.py``: using Phonon and PyQt4 to create a very simple
-  audio player
-- ``qt4_phonon_duplicate_video.py``: duplicate video streams to different
-  playback widgets using PyQt4 and Phonon (requires GStreamer backend for
-  Phonon at point of writing)
-- ``qt4_phonon_video.py``: using Phonon and PyQt4 to create a very simple
-  video player
-- ``qt4_service_manager.py``: uses ``QDirModel`` to create a simple service
-  manager for ``/etc/init.d`` scripts
-- ``qt4_simple_shell_widget.py``: demonstrates live catching of subprocess
-  output using QProcess
-- ``qt4_table_header_alignment.py``: how to align table headers in a
-  QTableView
-- ``qt4_table_resize.py``: a simple QTableView-derived class, which resizes
-  columns automatically, if the view is resized
-- ``qt4_tcp_socket.py``: illustrates the use of Qt4's tcp network
-  facilities by implementing a very simple chat program
-- ``qt4_thread_progress.py``: demonstrates how to report the progress of
-  long-running background worker threads using QProgressBar and QThread
-- ``qt4_toolbar_in_tabs.py``: how to use toolbars within a QTabWidget (using
-  a bit of dirty trick)
-- ``qt4_webkit_render_to_image.py``: render a website to an image file using
-  PyQt4 and QtWebkit
-- ``qt4_window_screenshot.py``: takes a screenshot of window client area and
-  displays the screenshot
-- ``qt4_xml_model.py``: demonstrates the powers of model classes in Qt4
-- ``screenshot.py``: uses ``xwininfo`` and ``import`` to take screenshots
-  based on window titles
-- ``ssh_client.py``: demonstrates the use the paramiko API
-- ``xmpp_muc_logger.py``: implements a logger for multiple Jabber MUCs
-  using threading and xmpppy
-- ``xmpp_muc_logger_unthreaded.py``: the same as above, but only for a
-  single MUC, due to lack of threading
+.. contents::
 
-Use the following commands to build all C and C++ sources (make sure, that
-all required libraries are installed!)::
+C and C++ snippets
+------------------
+
+This section holds snippets written in C and C++ to demonstrate specific
+techniques or implementation patterns
+
+``posix_getch.c``
+  POSIX compatible implementation of the ``getch()`` function from
+  Microsoft C APIs
+
+
+Python snippets
+---------------
+
+This section provides some general Python snippets as well as demonstrations
+of some more specific APIs
+
+``advanced_readline_usage.py``
+  The powers of ``readline`` for completion and line editing
+
+``conftool.py``
+  A command-line configuration editor using configobj
+
+``du.py``
+  PoC ``du`` implementation (somewhere from usenet)
+
+``easy_uninstall.py:``
+  PoC uninstall implementation for ``easy_install``.  *Don't* use it in
+  production, *don't* use ``easy_install`` in production:  There is ``pip``
+
+``flatten_nested_lists.py``
+  Flattens nested lists in python
+
+``forking.py``
+  Classic unix double fork for daemonizing
+
+``magic_database.py``
+  Detect mimetype and encoding of files using libmagic
+
+``onetimepad.py``
+  simple one-time-pad implemented in Python 3
+
+``ping.py``
+  The classic ``ping`` utility implemented in Python
+
+``pruefercode.py``
+  Two different algorithms to calculate the Prüfer code for graphs
+
+``pwgen.py``
+  Password generator implemented in python using the random module
+
+``pycrypto_aes_padding.py``
+  Enhances the AES implementation of pycrypto with proper padding
+
+``screenshot.py``
+
+  Take screenshots by window title using ``xwininfo`` and ``import`` (X11
+  only)
+
+``ssh_client.py``
+  Simple paramiko demonstration
+
+``xmpp_muc_logger.py``
+  Log multiple Jabber MUCs using ``threading`` and ``xmpppy``
+
+``xmpp_muc_logger_unthreaded.py``
+  Log a single MUC, unthreaded
+
+
+PyQt4
+^^^^^
+
+This section provides a wide variety of snippets for PyQt4, ranging from
+model/view-programming to phonon multimedia art.
+
+``qt4_checkable_filesystem_model.py``
+  ``QFileSystemModel``-derived model, which adds checkboxes to file names
+
+``qt4_configobj_editor.py``
+  Combines Qt4, configobj and validate to create a generic config editor
+  based on the configspec feature of configobj
+
+``qt4-countdown.py``
+  A simple PyQt4 countdown clock
+
+``qt4_dbus_trayicon.py``
+  Combines Qt4 and python-dbus to create a remote-controllable,
+  single-instance systray application
+
+``qt4_frameless_fullscreen.py``
+  Create a fullscreen window without frame
+
+``qt4_painiting.py``
+  Paint a rotating spiral to demonstrate the Qt4 painting API
+
+``qt4_icons_listview.py``
+  The art of having icons in your ``QListView``
+
+``qt4_input_validation.py``
+  Validating input using custom ``QValidator``\ s
+
+``qt4_phonon_audio.py``
+  Using Phonon and PyQt4 to create a very simple audio player
+
+``qt4_phonon_duplicate_video.py``
+  Duplicate video streams to different playback widgets using PyQt4 and
+  Phonon (requires GStreamer backend)
+
+``qt4_phonon_video.py``
+  Using Phonon and PyQt4 to create a very simple video player
+
+``qt4_service_manager.py``
+  A *very* simple service manager for ``/etc/init.d`` atop of ``QDirModel``
+
+``qt4_simple_shell_widget.py``
+  Live catching of subprocess output using ``QProcess``
+
+``qt4_table_header_alignment.py``
+  Controlling the alignment of table headers ``QTableView``
+
+``qt4_table_resize.py``
+  A simple ``QTableView``-derived class, which resizes columns
+  automatically, if the view is resized
+
+``qt4_tcp_socket.py``
+  Illustrates the use of Qt4's tcp network facilities by implementing a very
+  simple chat program
+
+``qt4_thread_progress.py``
+  A basic example for background threads and progress reporting with
+  ``QProgressBar`` and ``QThread``
+
+``qt4_toolbar_in_tabs.py``
+  Using toolbars within a ``QTabWidget`` with a bit of a dirty trick
+
+``qt4_webkit_render_to_image.py``
+  render a website to an image file using PyQt4 and QtWebkit
+
+``qt4_window_screenshot.py``
+  Take a screenshot of the window client area and display the screenshot.
+
+``qt4_xml_model.py``
+  The power of custom model classes in Qt4
+
+
+Other snippets
+--------------
+
+Miscellaneous snippets in various languages for various things
+
+``kdialog_progressbar.bash``
+  Demonstrate the progress bar mode of ``kdialog``
+
+
+Comparing languages and libraries
+---------------------------------
+
+This section contains snippets, which compare implementations of a certain
+technique or algorithm in different languages and different libraries
+
+
+DBus signal handling in C, C++ and Python using Gtk and Qt4
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``dbus_glib_hal_signals.c``
+  DBus signal handling using the dbus-glib bindings
+
+``dbus_qt4_hal_signals.cpp``
+  DBus signal handling using QtDBus
+
+``dbus_glib_hal_signals.py``
+  DBus signal handling using the python-dbus (shortest of course)
+
+
+Usage instructions
+------------------
+
+The dependencies of the snippets are not explicitly documented.  Examine the
+description and especially the source code of the snippets you are
+interested in to find out, which dependencies must be installed for these
+snippets.
+
+If all dependencies are available, you can simply execute most snippets
+using the corresponding interpreter.  However, C and C++ snippets need to be
+compile first.  A cmake-based build system is provided for this task, just
+run::
 
    mkdir build
    cd build
    cmake ..
    make
+
+C and C++ snippets, whose dependencies are missing, are silently skipped.
+If you are missing an executable for snippet, make sure, that really all
+dependencies are installed.  Read the ``CMakeLists.txt``, if necessary.
