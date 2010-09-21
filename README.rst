@@ -58,7 +58,6 @@ of some more specific APIs
   Enhances the AES implementation of pycrypto with proper padding
 
 ``screenshot.py``
-
   Take screenshots by window title using ``xwininfo`` and ``import`` (X11
   only)
 
