@@ -22,7 +22,7 @@ extern "C" {
 }
 
 
-int main(int argc, char *argv[]) {
+int main() {
     using namespace std;
 
     // get us "connected" to the udev library.  This context is required for
