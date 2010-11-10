@@ -100,6 +100,9 @@ model/view-programming to phonon multimedia art.
 ``qt4_icons_listview.py``
   The art of having icons in your ``QListView``
 
+``qt4_image_scaling.py``
+  A custom widget to draw and scale images
+
 ``qt4_input_validation.py``
   Validating input using custom ``QValidator``\ s
 
