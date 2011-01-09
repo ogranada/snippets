@@ -146,6 +146,9 @@ model/view-programming to phonon multimedia art.
 ``qt4_window_screenshot.py``
   Take a screenshot of the window client area and display the screenshot.
 
+``qt4_x11_key_names.py``
+  Turn key codes to X11 key names
+
 ``qt4_xml_model.py``
   The power of custom model classes in Qt4
 
