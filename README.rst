@@ -13,6 +13,12 @@ techniques or implementation patterns
   POSIX compatible implementation of the ``getch()`` function from
   Microsoft C APIs
 
+``udev_enumerate.cpp``
+  Usage of libudev to enumerate devices known to the linux kernel
+
+``udev_monitor.cpp``
+  Usage of libudev to monitor the device tree of the linux kernel
+
 
 Python snippets
 ---------------
