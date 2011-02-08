@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009, 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2010, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -33,9 +33,6 @@
 
 import os
 import sys
-
-import sip
-sip.setapi('QVariant', 2)
 
 from PyQt4.QtCore import Qt, QSize, QAbstractListModel
 from PyQt4.QtGui import QApplication, QMainWindow, QListView, QIcon

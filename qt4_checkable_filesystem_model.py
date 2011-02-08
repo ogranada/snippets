@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2010, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -39,9 +39,6 @@ import sys
 import os
 from xml.sax.saxutils import escape
 
-import sip
-sip.setapi('QString', 2)
-sip.setapi('QVariant', 2)
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import (QFileSystemModel, QListView, QMainWindow,
                          QAction, QStyle, QApplication, QFileDialog,
@@ -64,23 +61,28 @@ class CheckableFilesystemModel(QFileSystemModel):
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.CheckStateRole:
-            filename = self.data(index, QFileSystemModel.FileNameRole)
+            filename = unicode(self.data(
+                    index, QFileSystemModel.FileNameRole).toPyObject())
             if filename:
-                return Qt.Checked if filename in self._checked_files else Qt.Unchecked
+                return (Qt.Checked
+                        if filename in self._checked_files
+                        else Qt.Unchecked)
         return QFileSystemModel.data(self, index, role)
 
     def setData(self, index, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
-            filename = self.data(index, QFileSystemModel.FileNameRole)
-            if filename:
-                if value == Qt.Checked:
-                    self._checked_files.add(filename)
-                else:
-                    self._checked_files.discard(filename)
-                return True
+            filename = unicode(self.data(
+                index, QFileSystemModel.FileNameRole).toPyObject())
+            if value.toPyObject() == Qt.Checked:
+                self._checked_files.add(filename)
+            else:
+                self._checked_files.discard(filename)
+            return True
         return QFileSystemModel.setData(self, index, value, role)
 
     def _updateOnRename(self, path, oldname, newname):
+        oldname = unicode(oldname)
+        newname = unicode(newname)
         if oldname in self._checked_files:
             self._checked_files.remove(oldname)
             self._checked_files.add(newname)
