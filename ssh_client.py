@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -31,13 +31,13 @@ SERVER_PATTERN = re.compile('^(?:(\w*)@)?([A-Za-z0-9_.]*)(?::(\d*))?$')
 
 def main():
     args = sys.argv[1:]
-    if len(sys.argv) < 3:
+    if len(args) < 3:
         sys.exit('%s server command\nInvalid number of arguments.' %
                  os.path.basename(sys.argv[0]))
     # extract the username, the server and the port from command line
     # argument
-    username, server, port = SERVER_PATTERN.match(sys.argv[1]).groups()
-    command = ' '.join(sys.argv[2:])
+    username, server, port = SERVER_PATTERN.match(args[0]).groups()
+    command = ' '.join(args[1:])
     # create the client
     client = SSHClient()
     # load the keys of known hosts for host key verification

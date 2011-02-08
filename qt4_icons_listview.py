@@ -31,7 +31,6 @@
 """
 
 
-import os
 import sys
 
 from PyQt4.QtCore import Qt, QSize, QAbstractListModel

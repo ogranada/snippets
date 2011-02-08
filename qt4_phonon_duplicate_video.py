@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,7 @@
 
 import sys
 
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
 from PyQt4.phonon import Phonon
 
 

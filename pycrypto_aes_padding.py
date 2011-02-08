@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-# Copyright (c) 2007 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2007, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -55,7 +55,6 @@ def test_encrypt():
     print 'encrypted'
 
 def test_decrypt():
-    block_size = 16
     f = open('key', 'rb')
     key = f.read()
     f.close()

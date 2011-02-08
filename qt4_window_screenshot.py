@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,6 @@
 
 
 import sys
-import subprocess
 
 from PyQt4 import QtGui, QtCore
 
@@ -55,6 +54,7 @@ class MyMainWindow(QtGui.QMainWindow):
         # using import from ImageMagick
         # pass the window id to import, and read the image from standard
         # output
+        ## import subprocess
         ## proc = subprocess.Popen(
         ##     ['import', '-silent', '-window', str(self.winId()), 'png:-'],
         ##     stdout=subprocess.PIPE)

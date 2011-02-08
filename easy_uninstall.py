@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008, 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -71,7 +71,6 @@ else:
         """
         Find all scripts contained in the specified ``distribution``.
         """
-        prefix = os.path.join(sys.exec_prefix, 'Scripts')
         ## TODO: finish implementation for windows
         warn('Scripts are not yet supported on windows')
 
