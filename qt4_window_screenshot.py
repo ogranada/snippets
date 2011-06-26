@@ -31,46 +31,38 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4 import QtGui, QtCore
+from PySide.QtCore import Slot, QMetaObject
+from PySide.QtGui import (QApplication, QMainWindow, QWidget, QLabel,
+                          QPushButton, QVBoxLayout, QPixmap)
 
 
-class MyMainWindow(QtGui.QMainWindow):
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        central = QtGui.QWidget(self)
-        layout = QtGui.QVBoxLayout(central)
-        self.image_label = QtGui.QLabel('here\'s the shot', central)
+class MainWindow(QMainWindow):
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
+        central = QWidget(self)
+        layout = QVBoxLayout(central)
+        self.image_label = QLabel('here\'s the shot', central)
         layout.addWidget(self.image_label)
-        self.button = QtGui.QPushButton('Shoot me!', central)
+        self.button = QPushButton('Shoot me!', central)
         self.button.setObjectName('shot_button')
         layout.addWidget(self.button)
         self.setCentralWidget(central)
-        QtCore.QMetaObject.connectSlotsByName(self)
+        QMetaObject.connectSlotsByName(self)
 
-    @QtCore.pyqtSignature('')
+    @Slot()
     def on_shot_button_clicked(self):
-        # using import from ImageMagick
-        # pass the window id to import, and read the image from standard
-        # output
-        ## import subprocess
-        ## proc = subprocess.Popen(
-        ##     ['import', '-silent', '-window', str(self.winId()), 'png:-'],
-        ##     stdout=subprocess.PIPE)
-        ## stdout = proc.communicate()[0]
-        ## image = QtGui.QImage()
-        ## image.loadFromData(stdout)
-        ## self.image_label.setPixmap(QtGui.QPixmap.fromImage(image))
-
-        # the right way!
-        self.image_label.setPixmap(QtGui.QPixmap.grabWidget(self))
+        self.image_label.setPixmap(QPixmap.grabWidget(self))
 
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    window = MyMainWindow()
+    app = QApplication(sys.argv)
+    window = MainWindow()
     window.show()
     app.exec_()
 

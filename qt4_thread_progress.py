@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2010 Christian Hausknecht <christian.hausknecht@gmx.de>
+# Copyright (c) 2010, 2011 Christian Hausknecht <christian.hausknecht@gmx.de>
 # Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -42,20 +42,20 @@
 import sys
 from functools import partial
 
-from PyQt4.QtCore import QThread, QSemaphore, pyqtSignal
-from PyQt4.QtGui import (QApplication, QMainWindow, QWidget, QPlainTextEdit,
-                         QProgressBar, QAction, QVBoxLayout, QIcon)
+from PySide.QtCore import QThread, QSemaphore, Signal
+from PySide.QtGui import (QApplication, QMainWindow, QWidget, QPlainTextEdit,
+                          QProgressBar, QAction, QVBoxLayout, QIcon)
 
 
 class Counter(QThread):
 
     #: this signal is emitted whenever the worker has performed a single
     #  step
-    progress = pyqtSignal(int)
+    progress = Signal(int)
     #: this signal publishes the minimum amount of required steps
-    minimumChanged = pyqtSignal(int)
+    minimumChanged = Signal(int)
     #: this signal publishes the maximum amount of required steps
-    maximumChanged = pyqtSignal(int)
+    maximumChanged = Signal(int)
 
     def __init__(self, maximum, parent=None):
         QThread.__init__(self, parent)

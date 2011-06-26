@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2010, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -40,14 +40,17 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 from functools import partial
 from optparse import OptionParser
 
-from PyQt4.QtCore import pyqtSignal, QObject, QTextStream, QTextCodec
-from PyQt4.QtGui import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+from PySide.QtCore import Signal, QObject, QTextStream, QTextCodec
+from PySide.QtGui import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                          QLineEdit, QPlainTextEdit, QAction, QStyle)
-from PyQt4.QtNetwork import QTcpSocket, QTcpServer, QHostAddress
+from PySide.QtNetwork import QTcpSocket, QTcpServer, QHostAddress
 
 
 HOST_ADDRESS = QHostAddress(QHostAddress.LocalHost)
@@ -58,7 +61,7 @@ def _stream_for_connection(connection):
     Create a UTF_8 encoded text stream from the given ``connection``.
     """
     stream = QTextStream(connection)
-    stream.setCodec(QTextCodec.codecForName('utf-8'))
+    stream.setCodec(QTextCodec.codecForName(b'utf-8'))
     return stream
 
 
@@ -73,13 +76,13 @@ class ChatServer(QTcpServer):
     """
 
     #: emitted if the server shuts down
-    serverShutdown = pyqtSignal()
+    serverShutdown = Signal()
     #: emitted if the server receives text.  The text is given as argument
     #to slots
-    textReceived = pyqtSignal(str)
+    textReceived = Signal(str)
 
     def __init__(self, parent=None):
-        super().__init__(parent)
+        QTcpServer.__init__(self, parent)
         # all currently connected clients
         self.connections = set()
         # handle new clients
@@ -131,10 +134,10 @@ class ChatWidget(QWidget):
     """
 
     #: A notification (not chat!) message for the user
-    message = pyqtSignal(str)
+    message = Signal(str)
 
     def __init__(self, parent=None):
-        super().__init__(parent)
+        QWidget.__init__(self, parent)
         self.setLayout(QVBoxLayout(self))
         self.text_display = QPlainTextEdit(self)
         self.text_display.setReadOnly(True)
@@ -226,7 +229,7 @@ class ChatWindow(QMainWindow):
     The chat application window.
     """
     def __init__(self, parent=None):
-        super().__init__()
+        QMainWindow.__init__(self, parent)
         self.chat_widget = ChatWidget(self)
         self.setCentralWidget(self.chat_widget)
         # set up all actions
@@ -281,7 +284,7 @@ def main():
                       action='store_true')
     opts, args = parser.parse_args()
     if opts.server:
-        from PyQt4.QtCore import QCoreApplication
+        from PySide.QtCore import QCoreApplication
         app = QCoreApplication(sys.argv)
         # spawn a server
         server = ChatServer()

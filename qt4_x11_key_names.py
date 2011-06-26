@@ -37,7 +37,7 @@ import sys
 from ctypes import CDLL, c_uint, c_char_p
 from ctypes.util import find_library
 
-from PyQt4.QtGui import QApplication, QWidget
+from PySide.QtGui import QApplication, QWidget
 
 
 libX11 = CDLL(find_library('X11'))

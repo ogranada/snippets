@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,10 +31,13 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4.QtCore import QProcess, QString, SIGNAL
-from PyQt4.QtGui import QPlainTextEdit, QApplication
+from PySide.QtCore import QProcess
+from PySide.QtGui import QPlainTextEdit, QApplication
 
 
 class QSimpleShellWidget(QPlainTextEdit):
@@ -46,16 +49,20 @@ class QSimpleShellWidget(QPlainTextEdit):
     def setProcess(self, process):
         self.clear()
         self.process = process
-        self.connect(process, SIGNAL('readyReadStandardError()'),
-                     self.read_output)
-        self.connect(process, SIGNAL('readyReadStandardOutput()'),
-                     self.read_output)
+        process.readyReadStandardError.connect(self.read_output)
+        process.readyReadStandardOutput.connect(self.read_output)
 
     def read_output(self):
-        stdout = QString(self.process.readAllStandardOutput())
-        stderr = QString(self.process.readAllStandardError())
+        stdout = str(self.process.readAllStandardOutput()).decode(
+            sys.getfilesystemencoding())
+        stderr = str(self.process.readAllStandardError()).decode(
+            sys.getfilesystemencoding())
         self.appendPlainText(stderr)
         self.appendPlainText(stdout)
+
+    def closeEvent(self, event):
+        self.process.terminate()
+        event.accept()
 
 
 def main():

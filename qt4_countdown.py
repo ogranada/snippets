@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -33,8 +33,8 @@
 
 import sys
 
-from PyQt4.QtCore import Qt, SIGNAL, QTime, QTimer
-from PyQt4.QtGui import QApplication, QLabel
+from PySide.QtCore import Qt, QTime, QTimer
+from PySide.QtGui import QApplication, QLabel
 
 
 class CountdownWidget(QLabel):
@@ -44,14 +44,13 @@ class CountdownWidget(QLabel):
         self.setText(self.countdown.toString(Qt.ISODate))
         # setup the countdown timer
         self.timer = QTimer(self)
-        self.connect(self.timer, SIGNAL('timeout()'),
-                     self._update)
+        self.timer.timeout.connect(self._update_time)
 
     def start(self):
         # update the display every second
         self.timer.start(1000)
 
-    def _update(self):
+    def _update_time(self):
         # this gets called every seconds
         # adjust the remaining time
         self.countdown = self.countdown.addSecs(-1)

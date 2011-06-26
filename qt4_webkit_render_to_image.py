@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -35,13 +35,14 @@
 """
 
 
-from __future__ import print_function, division
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
 
 import sys
 
-from PyQt4.QtCore import QObject, QUrl
-from PyQt4.QtGui import QApplication, QImage, QPainter
-from PyQt4.QtWebKit import QWebPage
+from PySide.QtCore import QObject, QUrl
+from PySide.QtGui import QApplication, QImage, QPainter
+from PySide.QtWebKit import QWebPage
 
 
 class ImageRenderer(QObject):

@@ -32,17 +32,21 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4 import QtGui
+from PySide.QtGui import QApplication, QMainWindow, QTabWidget
 
 
-class ToolbarTabWidget(QtGui.QMainWindow):
+class ToolbarTabWidget(QMainWindow):
     """
     Provides a simple tabwidget with a toolbar.
     """
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
         self.setupUi()
 
     def setupUi(self):
@@ -51,14 +55,14 @@ class ToolbarTabWidget(QtGui.QMainWindow):
 
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         self.setupUi()
 
     def setupUi(self):
         self.setWindowTitle('Tab Test')
-        self.tabs = QtGui.QTabWidget(self)
+        self.tabs = QTabWidget(self)
         self.setCentralWidget(self.tabs)
         # QMainWindow inherits QWidget, thus it can simply be added as child
         # widget
@@ -67,7 +71,7 @@ class MainWindow(QtGui.QMainWindow):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mainwindow = MainWindow()
     mainwindow.show()
     app.exec_()

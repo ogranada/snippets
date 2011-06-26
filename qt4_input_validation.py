@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,10 +31,12 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import (QMainWindow, QLineEdit, QDoubleValidator,
+from PySide.QtGui import (QMainWindow, QLineEdit, QDoubleValidator,
                          QMessageBox, QApplication, QWidget,
                          QVBoxLayout)
 
@@ -52,13 +54,12 @@ class MyMainWindow(QMainWindow):
         # and add it to the edito widget
         self.edit.setValidator(edit_validator)
         self.setCentralWidget(central)
-        self.connect(self.edit, SIGNAL('returnPressed()'),
-                     self.do_it)
+        self.edit.returnPressed.connect(self.do_it)
 
     def do_it(self):
         QMessageBox.information(
             self, 'Do it!', 'The input was {0}'.format(self.edit.text()))
-        number, ok = self.edit.text().toDouble()
+        number = float(self.edit.text())
         QMessageBox.information(
             self, 'Do it!', 'Convert to a double and add something: '
             '{0} + 2.5 = {1}'.format(number, number+2.5))

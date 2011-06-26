@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,9 +32,15 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4 import QtCore, QtGui
+from PySide.QtCore import Qt, QAbstractTableModel
+from PySide.QtGui import (QMainWindow, QSplitter, QWidget, QLabel, QTableView,
+                          QVBoxLayout, QTableWidget, QTableWidgetItem,
+                          QApplication)
 
 
 # The data displayed by the model
@@ -46,7 +52,7 @@ DATA = [
     ]
 
 
-class TableModel(QtCore.QAbstractTableModel):
+class TableModel(QAbstractTableModel):
 
     def rowCount(self, parent):
         # return the number of rows
@@ -57,48 +63,49 @@ class TableModel(QtCore.QAbstractTableModel):
         return len(DATA[0])
 
     def headerData(self, section, orientation, role):
-        if orientation != QtCore.Qt.Horizontal:
+        if orientation != Qt.Horizontal:
             # don't use vertical headers!
-            return QtCore.QVariant()
-        if role == QtCore.Qt.DisplayRole:
+            return
+        if role == Qt.DisplayRole:
             # the text to display
-            return QtCore.QVariant('No {0}'.format(section))
-        elif role == QtCore.Qt.TextAlignmentRole:
+            return 'No {0}'.format(section)
+        elif role == Qt.TextAlignmentRole:
             # and the alignment
-            return QtCore.QVariant(QtCore.Qt.AlignRight)
+            return Qt.AlignRight
         else:
-            return QtCore.QVariant()
+            return
 
-    def data(self, index, role=QtCore.Qt.DisplayRole):
-        if role == QtCore.Qt.DisplayRole:
+    def data(self, index, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole:
             # the text to display!
-            return QtCore.QVariant(DATA[index.row()][index.column()])
-        elif role == QtCore.Qt.TextAlignmentRole:
+            return DATA[index.row()][index.column()]
+        elif role == Qt.TextAlignmentRole:
             # the alignment of the cell
-            return QtCore.QVariant(QtCore.Qt.AlignCenter)
+            return Qt.AlignCenter
         else:
-            return QtCore.QVariant()
+            return
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow):
+
     def __init__(self, parent=None):
-        super(QtGui.QMainWindow, self).__init__(parent)
+        QMainWindow.__init__(self, parent)
         self.setup_ui()
 
     def setup_ui(self):
-        splitter = QtGui.QSplitter(self)
-        left = QtGui.QWidget(splitter)
-        left.setLayout(QtGui.QVBoxLayout(left))
-        left.layout().addWidget(QtGui.QLabel('QTableView', left))
-        tableview = QtGui.QTableView(left)
+        splitter = QSplitter(self)
+        left = QWidget(splitter)
+        left.setLayout(QVBoxLayout(left))
+        left.layout().addWidget(QLabel('QTableView', left))
+        tableview = QTableView(left)
         tableview.setModel(TableModel(tableview))
         left.layout().addWidget(tableview)
         splitter.addWidget(left)
-        right = QtGui.QWidget(splitter)
-        right.setLayout(QtGui.QVBoxLayout(right))
-        right.layout().addWidget(QtGui.QLabel('QTableWidget', right))
+        right = QWidget(splitter)
+        right.setLayout(QVBoxLayout(right))
+        right.layout().addWidget(QLabel('QTableWidget', right))
         # create a table widget for DATA
-        tablewidget = QtGui.QTableWidget(len(DATA), len(DATA[1]), right)
+        tablewidget = QTableWidget(len(DATA), len(DATA[1]), right)
         right.layout().addWidget(tablewidget)
         splitter.addWidget(right)
         self.setCentralWidget(splitter)
@@ -109,26 +116,26 @@ class MainWindow(QtGui.QMainWindow):
     def add_data(self, widget):
         # delete vertical headers
         for i in xrange(widget.rowCount()):
-            widget.setVerticalHeaderItem(i, QtGui.QTableWidgetItem())
+            widget.setVerticalHeaderItem(i, QTableWidgetItem())
         # set horizontal headers
         for i in xrange(widget.columnCount()):
             # the text
-            item = QtGui.QTableWidgetItem('No {0}'.format(i))
+            item = QTableWidgetItem('No {0}'.format(i))
             # the alignment
-            item.setTextAlignment(QtCore.Qt.AlignRight)
+            item.setTextAlignment(Qt.AlignRight)
             widget.setHorizontalHeaderItem(i, item)
         # set data
         for y, row in enumerate(DATA):
             for x, cell in enumerate(row):
                 # the text
-                item = QtGui.QTableWidgetItem(cell)
+                item = QTableWidgetItem(cell)
                 # the alignment
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(Qt.AlignCenter)
                 widget.setItem(y, x, item)
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mainwindow = MainWindow()
     mainwindow.show()
     app.exec_()

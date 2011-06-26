@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,10 +31,13 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt, QVariant
-from PyQt4.QtGui import QMainWindow, QTableView, QApplication
+from PySide.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PySide.QtGui import QMainWindow, QTableView, QApplication
 
 
 class SimpleTableModel(QAbstractTableModel):
@@ -55,12 +58,11 @@ class SimpleTableModel(QAbstractTableModel):
 
     def data(self, index, role):
         if role != Qt.DisplayRole or not index.isValid():
-            return QVariant()
+            return
         try:
-            return QVariant(
-                self.table[index.row()][index.column()])
+            return self.table[index.row()][index.column()]
         except IndexError:
-            return QVariant(0)
+            return 0
 
 
 class AutoSizeTableView(QTableView):

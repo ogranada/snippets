@@ -77,18 +77,14 @@ of some more specific APIs
   Log a single MUC, unthreaded
 
 
-PyQt4
-^^^^^
+Python and Qt4
+^^^^^^^^^^^^^^
 
-This section provides a wide variety of snippets for PyQt4, ranging from
+This section provides a wide variety of snippets for PySide, ranging from
 model/view-programming to phonon multimedia art.
 
 ``qt4_checkable_filesystem_model.py``
   ``QFileSystemModel``-derived model, which adds checkboxes to file names
-
-``qt4_configobj_editor.py``
-  Combines Qt4, configobj and validate to create a generic config editor
-  based on the configspec feature of configobj
 
 ``qt4-countdown.py``
   A simple PyQt4 countdown clock
@@ -121,9 +117,6 @@ model/view-programming to phonon multimedia art.
 
 ``qt4_phonon_video.py``
   Using Phonon and PyQt4 to create a very simple video player
-
-``qt4_service_manager.py``
-  A *very* simple service manager for ``/etc/init.d`` atop of ``QDirModel``
 
 ``qt4_simple_shell_widget.py``
   Live catching of subprocess output using ``QProcess``

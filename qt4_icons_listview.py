@@ -31,10 +31,13 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4.QtCore import Qt, QSize, QAbstractListModel
-from PyQt4.QtGui import QApplication, QMainWindow, QListView, QIcon
+from PySide.QtCore import Qt, QSize, QAbstractListModel
+from PySide.QtGui import QApplication, QMainWindow, QListView, QIcon
 
 
 class IconModel(QAbstractListModel):

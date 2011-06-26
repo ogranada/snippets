@@ -39,10 +39,10 @@ import sys
 import os
 from xml.sax.saxutils import escape
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import (QFileSystemModel, QListView, QMainWindow,
-                         QAction, QStyle, QApplication, QFileDialog,
-                         QMessageBox)
+from PySide.QtCore import Qt
+from PySide.QtGui import (QFileSystemModel, QListView, QMainWindow,
+                          QAction, QStyle, QApplication, QFileDialog,
+                          QMessageBox)
 
 
 class CheckableFilesystemModel(QFileSystemModel):
@@ -61,8 +61,7 @@ class CheckableFilesystemModel(QFileSystemModel):
 
     def data(self, index, role=Qt.DisplayRole):
         if role == Qt.CheckStateRole:
-            filename = unicode(self.data(
-                    index, QFileSystemModel.FileNameRole).toPyObject())
+            filename = self.data(index, QFileSystemModel.FileNameRole)
             if filename:
                 return (Qt.Checked
                         if filename in self._checked_files
@@ -71,9 +70,8 @@ class CheckableFilesystemModel(QFileSystemModel):
 
     def setData(self, index, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
-            filename = unicode(self.data(
-                index, QFileSystemModel.FileNameRole).toPyObject())
-            if value.toPyObject() == Qt.Checked:
+            filename = self.data(index, QFileSystemModel.FileNameRole)
+            if value == Qt.Checked:
                 self._checked_files.add(filename)
             else:
                 self._checked_files.discard(filename)

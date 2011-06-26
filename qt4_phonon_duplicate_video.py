@@ -30,20 +30,36 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
+
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4 import QtGui
-from PyQt4.phonon import Phonon
+from PySide.QtGui import (QMainWindow, QWidget, QHBoxLayout, QAction, QStyle,
+                          QFileDialog, QApplication)
+from PySide.phonon import Phonon
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow):
+
+    ACTIONS = [
+        ('ask_open_filename', 'Open', QStyle.SP_DialogOpenButton),
+        ('play', 'Play', QStyle.SP_MediaPlay),
+        ('pause', 'Pause', QStyle.SP_MediaPause),
+        ('stop', 'Stop', QStyle.SP_MediaStop),
+        ('copy_to_right_video', 'Copy video to right', None),
+        ('remove_right_video', 'Remove right video', None)
+    ]
+
+
     def __init__(self, parent=None):
-        super(QtGui.QMainWindow, self).__init__(parent)
+        QMainWindow.__init__(self, parent)
 
         # create two video widgets
-        central = QtGui.QWidget(self)
+        central = QWidget(self)
         self.setCentralWidget(central)
-        layout = QtGui.QHBoxLayout(central)
+        layout = QHBoxLayout(central)
         central.setLayout(layout)
         self.left_video = Phonon.VideoWidget(self)
         self.right_video = Phonon.VideoWidget(self)
@@ -60,60 +76,53 @@ class MainWindow(QtGui.QMainWindow):
         # holds the Path object, that connects self.media with self.right_video
         self.right_path = None
 
-        self.actions = self.addToolBar('Actions')
-        # some actions for control
-        self.open = QtGui.QAction(self.style().standardIcon(
-            QtGui.QStyle.SP_DialogOpenButton), 'Open', self)
-        self.open.setObjectName('open')
-        self.play = QtGui.QAction(self.style().standardIcon(
-            QtGui.QStyle.SP_MediaPlay), 'Play', self)
-        self.pause = QtGui.QAction(self.style().standardIcon(
-            QtGui.QStyle.SP_MediaPause), 'Pause', self)
-        self.stop = QtGui.QAction(self.style().standardIcon(
-            QtGui.QStyle.SP_MediaStop), 'Stop', self)
-        self.copy = QtGui.QAction('Copy video to right', self)
-        self.uncopy = QtGui.QAction('Remove right video', self)
-        self.uncopy.setEnabled(False)
-        # add actions to the toolbar
-        for act in (self.open, self.play, self.pause, self.stop,
-                    self.copy, self.uncopy):
-            self.actions.addAction(act)
-        # connect the signals
-        self.play.triggered.connect(self.media.play)
-        self.pause.triggered.connect(self.media.pause)
-        self.stop.triggered.connect(self.media.stop)
-        self.open.triggered.connect(self.ask_open_video)
-        self.copy.triggered.connect(self.copy_to_right_video)
-        self.uncopy.triggered.connect(self.remove_right_video)
+        self.actions_toolbar = self.addToolBar('Actions')
+        self._actions = {}
+        for name, label, icon_name in self.ACTIONS:
+            if icon_name:
+                icon = self.style().standardIcon(icon_name)
+                action = QAction(icon, label, self)
+            else:
+                action = QAction(label, self)
+            action.setObjectName(name)
+            if name in ('play', 'pause', 'stop'):
+                action.triggered.connect(getattr(self.media, name))
+            else:
+                action.triggered.connect(getattr(self, name))
+            self.actions_toolbar.addAction(action)
+        self._action('remove_right_video').setEnabled(False)
+
+    def _action(self, name):
+        return self.findChild(QAction, name)
 
     def copy_to_right_video(self):
         if not self.right_path:
             self.right_path = Phonon.createPath(self.media, self.right_video)
-            self.copy.setEnabled(False)
-            self.uncopy.setEnabled(True)
+            self._action('copy_to_right_video').setEnabled(False)
+            self._action('remove_right_video').setEnabled(True)
 
     def remove_right_video(self):
         if self.right_path:
-            if self.right_path.disconnect():
+            if self.right_path.disconnectPath():
                 self.right_path = None
-                self.copy.setEnabled(True)
-                self.uncopy.setEnabled(False)
+                self._action('copy_to_right_video').setEnabled(True)
+                self._action('remove_right_video').setEnabled(False)
 
-    def ask_open_video(self):
-        filename = QtGui.QFileDialog.getOpenFileName(
+    def ask_open_filename(self):
+        filename, _ = QFileDialog.getOpenFileName(
             self, 'Open video ...', '', 'AVI Files (*.avi);;All files (*)')
         if filename:
             # load (but don't play!) the given filename
             self.media.setCurrentSource(Phonon.MediaSource(filename))
 
-    def closeEvent(self, evt):
+    def closeEvent(self, event):
         # stop video and audio playback, if the window is closed
         self.media.stop()
-        super(QtGui.QMainWindow, self).closeEvent(evt)
+        event.accept()
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mainwindow = MainWindow()
     mainwindow.show()
     app.exec_()

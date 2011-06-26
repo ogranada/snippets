@@ -39,14 +39,17 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
 
-from PyQt4 import QtCore
-from lxml import etree
 from itertools import count
 from copy import deepcopy
 
+from lxml import etree
+from PySide.QtCore import Qt, QAbstractItemModel, QModelIndex, QMimeData
 
-class AnalysisModel(QtCore.QAbstractItemModel):
+
+class AnalysisModel(QAbstractItemModel):
     """A hierarchical model, containing strings."""
 
     def __init__(self, filename, parent=None):
@@ -54,7 +57,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
         Creates a new AnalysisModel.  ``filename`` is a xml file, containing
         the strings to display.
         """
-        QtCore.QAbstractItemModel.__init__(self, parent)
+        QAbstractItemModel.__init__(self, parent)
         self.filename = filename
         self.strings = etree.parse(self.filename)
         # assign initial id for xml root item (``stringlist``)
@@ -99,11 +102,11 @@ class AnalysisModel(QtCore.QAbstractItemModel):
         """Inserts an etree element into this model."""
         self.insertRow(row, parent)
         index = self.index(row, 0, parent)
-        self.setData(index, QtCore.QVariant(element.get('caption')))
+        self.setData(index, element.get('caption'))
         for subelement in element:
             self._insert_element(self.rowCount(index), subelement, index)
 
-    def index(self,  row,  column,  parent=QtCore.QModelIndex()):
+    def index(self, row, column, parent=QModelIndex()):
         """
         Creates a model index for element at ``row`` and ``column``.
 
@@ -112,7 +115,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
         """
         if column != 0:
             # we only support one column, all others lead to invalid indexes
-            return QtCore.QModelIndex()
+            return QModelIndex()
         try:
             el = self._get_element_for_index(parent)[row]
             if not 'id' in el.attrib:
@@ -122,7 +125,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
             # using the element's id as internal id for the new index
             return self.createIndex(row,  column,  int(el.get('id')))
         except IndexError:
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
     def parent(self, index):
         """Returns the parent model index of ``index``."""
@@ -142,17 +145,17 @@ class AnalysisModel(QtCore.QAbstractItemModel):
                 row = parent.getparent().index(parent)
                 return self.createIndex(row, 0, int(parent.get('id')))
         # return invalid model index as fallback
-        return QtCore.QModelIndex()
+        return QModelIndex()
 
     def flags(self, index):
         """Returns supported actions for ``index``."""
-        return (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled |
-                QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsDragEnabled |
-                QtCore.Qt.ItemIsDropEnabled)
+        return (Qt.ItemIsEditable | Qt.ItemIsEnabled |
+                Qt.ItemIsSelectable | Qt.ItemIsDragEnabled |
+                Qt.ItemIsDropEnabled)
 
     def supportedDropActions(self):
         """Returns the drag n' drop actions supported by this model."""
-        return QtCore.Qt.CopyAction | QtCore.Qt.MoveAction
+        return Qt.CopyAction | Qt.MoveAction
 
     def mimeTypes(self):
         """
@@ -168,7 +171,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
             element = self._get_element_for_index(index)
             root.append(deepcopy(element))
         serialized = etree.tostring(root, xml_declaration=True)
-        mimedata = QtCore.QMimeData()
+        mimedata = QMimeData()
         mimedata.setData('text/xml', serialized)
         return mimedata
 
@@ -177,7 +180,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
         Drops mime ``data`` under ``parent`` item, at ``row`` and
         ``column``.  ``action`` is the action to be performed.
         """
-        if action == QtCore.Qt.IgnoreAction:
+        if action == Qt.IgnoreAction:
             return False
         if column > 0:
             return False
@@ -185,7 +188,7 @@ class AnalysisModel(QtCore.QAbstractItemModel):
         serialized = str(data.data('text/xml'))
         root = etree.fromstring(serialized)
         # remove old element, if items are moved within the tree
-        if action == QtCore.Qt.MoveAction:
+        if action == Qt.MoveAction:
             ids = self.all_ids_in_tree(root)
             self._remove_elements_by_ids(ids)
         # insert the new items
@@ -195,35 +198,32 @@ class AnalysisModel(QtCore.QAbstractItemModel):
             self._insert_element(row, element, parent)
         return True
 
-    def setData(self, index, value, role=QtCore.Qt.EditRole):
+    def setData(self, index, value, role=Qt.EditRole):
         """
         Sets the item at ``index`` to ``value``.
         Return ``True``, if successful, otherwise ``False``.
         """
-        if not index.isValid() or role != QtCore.Qt.EditRole:
+        if not index.isValid() or role != Qt.EditRole:
             return False
         element = self._get_element_for_index(index)
         data = unicode(value.toString())
         element.set('caption', data)
-        self.emit(
-            QtCore.SIGNAL('dataChanged(const QModelIndex &, '
-                          'const QModelIndex &)'),
-            index, index)
+        self.dataChanged.emit(index, index)
         return True
 
-    def data(self, index, role=QtCore.Qt.DisplayRole):
+    def data(self, index, role=Qt.DisplayRole):
         """Returns the data at ``index``."""
         # index must be valid and we must be in display role
-        if index.isValid() and role == QtCore.Qt.DisplayRole:
+        if index.isValid() and role == Qt.DisplayRole:
             # return the caption of the element associated with
             # ``index``
             element = self._get_element_for_index(index)
-            return QtCore.QVariant(element.get('caption'))
+            return element.get('caption')
         else:
-            # return empty object to indicate invalid values
-            return QtCore.QVariant()
+            # return nothing to indicate invalid values
+            return
 
-    def insertRows(self, position, rows, parent=QtCore.QModelIndex()):
+    def insertRows(self, position, rows, parent=QModelIndex()):
         """Inserts rows into this model."""
         parent_el = self._get_element_for_index(parent)
         self.beginInsertRows(parent, position, position+rows-1)

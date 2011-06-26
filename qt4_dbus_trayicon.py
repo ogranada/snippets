@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,36 +32,37 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
 
 import sys
 
 import dbus
 import dbus.service
-from dbus.mainloop.qt import DBusQtMainLoop
-from PyQt4 import QtGui, QtCore
+from  dbus.mainloop.glib import DBusGMainLoop
+from PySide.QtGui import (QWidget, QMainWindow, QLabel, QLineEdit, QPushButton,
+                          QVBoxLayout, QHBoxLayout, QSystemTrayIcon, QIcon,
+                          QApplication)
 
-# use the qt mainloop to handle dbus connections
-DBusQtMainLoop(set_as_default=True)
 
-
-class DBusTrayMainWindow(QtGui.QMainWindow):
+class DBusTrayMainWindow(QMainWindow):
     """A sample main window"""
 
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         self.setup_gui()
 
     def setup_gui(self):
         """Sets up a sample gui interface."""
-        central_widget = QtGui.QWidget(self)
+        central_widget = QWidget(self)
         central_widget.setObjectName('central_widget')
-        self.label = QtGui.QLabel('Hello World')
-        self.input_field = QtGui.QLineEdit()
-        change_button = QtGui.QPushButton('Change text')
-        close_button = QtGui.QPushButton('close')
-        quit_button = QtGui.QPushButton('quit')
-        central_layout = QtGui.QVBoxLayout()
-        button_layout = QtGui.QHBoxLayout()
+        self.label = QLabel('Hello World')
+        self.input_field = QLineEdit()
+        change_button = QPushButton('Change text')
+        close_button = QPushButton('close')
+        quit_button = QPushButton('quit')
+        central_layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
         central_layout.addWidget(self.label)
         central_layout.addWidget(self.input_field)
         # a separate layout to display buttons horizontal
@@ -74,24 +75,18 @@ class DBusTrayMainWindow(QtGui.QMainWindow):
         # create a system tray icon. Uncomment the second form, to have an
         # icon assigned, otherwise you will only be seeing an empty space in
         # system tray
-        self.systemtrayicon = QtGui.QSystemTrayIcon(self)
+        self.systemtrayicon = QSystemTrayIcon(self)
         self.systemtrayicon.show()
         # set a fancy icon
-        ## self.systemtrayicon.setIcon(QtGui.QIcon('/path/to/fancy/icon'))
-        self.connect(change_button, QtCore.SIGNAL('clicked()'),
-                     self.change_text)
-        self.connect(quit_button, QtCore.SIGNAL('clicked()'),
-                     QtGui.QApplication.instance().quit)
-        self.connect(close_button, QtCore.SIGNAL('clicked()'),
-                     self.hide)
+        self.systemtrayicon.setIcon(QIcon.fromTheme('help-browser'))
+        change_button.clicked.connect(self.change_text)
+        quit_button.clicked.connect(QApplication.instance().quit)
+        close_button.clicked.connect(self.hide)
         # show main window, if the system tray icon was clicked
-        self.connect(
-            self.systemtrayicon,
-            QtCore.SIGNAL('activated(QSystemTrayIcon::ActivationReason)'),
-            self.icon_activated)
+        self.systemtrayicon.activated.connect(self.icon_activated)
 
     def icon_activated(self, reason):
-        if reason == QtGui.QSystemTrayIcon.Trigger:
+        if reason == QSystemTrayIcon.Trigger:
             self.setVisible(self.isHidden())
 
     def change_text(self):
@@ -126,19 +121,19 @@ class DBusTrayMainWindowObject(dbus.service.Object):
         self.mainwindow.activateWindow()
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     # connect to the current user's session bus
-    bus = dbus.SessionBus()
+    bus = dbus.SessionBus(mainloop=DBusGMainLoop())
 
     try:
         # try to connect to our service.  If this fails with a dbus
         # exception, the application is already running.
-        mainwindow = bus.get_object('lunar.PyQt4DBusTest',
-                                    '/lunar/PyQt4DBusTest/MainWindow')
+        mainwindow = bus.get_object('lunar.Qt4DBusTest',
+                                    '/lunar/Qt4DBusTest/MainWindow')
     except dbus.DBusException:
         # the application is not running, so the service is registered and
         # the window created
-        name = dbus.service.BusName('lunar.PyQt4DBusTest', bus)
+        name = dbus.service.BusName('lunar.Qt4DBusTest', bus)
         mainwindow = DBusTrayMainWindow()
         # register the service object for the main window
         mainwindowobject = DBusTrayMainWindowObject(mainwindow, bus)

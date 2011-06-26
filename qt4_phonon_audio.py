@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,11 +32,14 @@
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PyQt4.phonon import Phonon
-from PyQt4.QtGui import (QApplication, QMainWindow, QAction, QStyle,
-                         QFileDialog)
+from PySide.phonon import Phonon
+from PySide.QtGui import (QApplication, QMainWindow, QAction, QStyle,
+                          QFileDialog)
 
 
 class PlaybackWindow(QMainWindow):
@@ -50,23 +53,16 @@ class PlaybackWindow(QMainWindow):
         Phonon.StoppedState: 'Stopped {filename}',
         Phonon.BufferingState: 'Buffering'}
 
+    ACTIONS = [
+        ('open', 'Open', QStyle.SP_DialogOpenButton),
+        ('play', 'Play', QStyle.SP_MediaPlay),
+        ('pause', 'Pause', QStyle.SP_MediaPause),
+        ('stop', 'Stop', QStyle.SP_MediaStop),
+    ]
+
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
         self.setWindowFilePath('No file')
-        # set up actions to control the playback
-        self.open_action = QAction(self.style().standardIcon(
-            QStyle.SP_DialogOpenButton), 'Open', self)
-        self.play_action = QAction(self.style().standardIcon(
-            QStyle.SP_MediaPlay), 'Play', self)
-        self.pause_action = QAction(self.style().standardIcon(
-            QStyle.SP_MediaPause), 'Pause', self)
-        self.stop_action = QAction(self.style().standardIcon(
-            QStyle.SP_MediaStop), 'Stop', self)
-        # create a toolbar for all these actions
-        self.actions = self.addToolBar('Actions')
-        for act in (self.open_action, self.play_action, self.pause_action,
-                    self.stop_action):
-            self.actions.addAction(act)
         # the media object controls the playback
         self.media = Phonon.MediaObject(self)
         # the audio output does the actual sound playback
@@ -74,22 +70,28 @@ class PlaybackWindow(QMainWindow):
         # a slider to seek to any given position in the playback
         self.seeker = Phonon.SeekSlider(self)
         self.setCentralWidget(self.seeker)
-        # connect the actions to the corresponding slots
-        self.open_action.triggered.connect(self._ask_open_filename)
-        self.stop_action.triggered.connect(self.media.stop)
-        self.pause_action.triggered.connect(self.media.pause)
-        self.play_action.triggered.connect(self.media.play)
-        # whenever the playback state changes, show a message to the user
-        self.media.stateChanged.connect(self._show_state_message)
-        # link media objects together
-        # the seeker will seek in the created media object
+        # link media objects together.  The seeker will seek in the created
+        # media object
         self.seeker.setMediaObject(self.media)
         # audio data from the media object goes to the audio output object
         Phonon.createPath(self.media, self.audio_output)
+        # set up actions to control the playback
+        self.actions = self.addToolBar('Actions')
+        for name, label, icon_name in self.ACTIONS:
+            icon = self.style().standardIcon(icon_name)
+            action = QAction(icon, label, self)
+            action.setObjectName(name)
+            self.actions.addAction(action)
+            if name == 'open':
+                action.triggered.connect(self._ask_open_filename)
+            else:
+                action.triggered.connect(getattr(self.media, name))
+        # whenever the playback state changes, show a message to the user
+        self.media.stateChanged.connect(self._show_state_message)
 
     def _ask_open_filename(self):
         # ask the user for a filename
-        filename = QFileDialog.getOpenFileName(
+        filename, _ = QFileDialog.getOpenFileName(
             self, 'Open audio file ...', '',
             'Audio Files (*.mp3 *.ogg *.wav);;All files (*)')
         if filename:

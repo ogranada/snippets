@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -30,16 +30,18 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
 
 import sys
 
-from PyQt4.QtCore import Qt, SIGNAL
-from PyQt4.QtGui import QApplication, QMainWindow, QMenu, QAction
+from PySide.QtCore import Qt
+from PySide.QtGui import QApplication, QMainWindow, QMenu, QAction
 
 
 class MyMainWindow(QMainWindow):
     def __init__(self, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        QMainWindow.__init__(self, parent)
         # activate the window and use the full screen
         self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
         # empty the mouse cursor
@@ -49,8 +51,7 @@ class MyMainWindow(QMainWindow):
         quit = QAction('&Quit', self)
         appmenu.addAction(quit)
         self.menuBar().addMenu(appmenu)
-        self.connect(quit, SIGNAL('triggered()'),
-                     QApplication.instance().quit)
+        quit.triggered.connect(QApplication.instance().quit)
 
 
 def main():

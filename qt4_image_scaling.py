@@ -35,9 +35,9 @@ from __future__ import (print_function, division, unicode_literals,
 import sys
 from contextlib import contextmanager
 
-from PyQt4.QtCore import pyqtProperty, QDir
-from PyQt4.QtGui import (QApplication, QWidget, QMainWindow, QPixmap, QImage,
-                         QPainter, QIcon, QAction, QFileDialog)
+from PySide.QtCore import Property, Qt, QDir
+from PySide.QtGui import (QApplication, QWidget, QMainWindow, QPixmap, QImage,
+                          QPainter, QIcon, QAction, QFileDialog)
 
 
 @contextmanager
@@ -53,33 +53,32 @@ class ImageView(QWidget):
         self._image = None
         self._scale = False
 
-    @pyqtProperty(bool)
-    def scale(self):
+    def _get_scale(self):
         return self._scale
 
-    @scale.setter
-    def scale(self, value):
+    def _set_scale(self, value):
         if self._scale != value:
             self._scale = value
             self.update()
 
-    @pyqtProperty(QImage)
-    def image(self):
+    def _get_image(self):
         return self._image
 
-    @image.setter
-    def image(self, image):
+    def _set_image(self, image):
         self._image = image
         self.update()
 
-    def paintEvent(self, evt):
+    scale = Property(bool, _get_scale, _set_scale)
+    image = Property(QImage, _get_image, _set_image)
+
+    def paintEvent(self, event):
         if self._image is None:
-            return QWidget.paintEvent(self, evt)
+            return QWidget.paintEvent(self, event)
 
         with paint(self) as painter:
             painter.setRenderHint(QPainter.Antialiasing)
             painter.setRenderHint(QPainter.HighQualityAntialiasing)
-            pixmap = QPixmap.fromImage(self.image)
+            pixmap = QPixmap.fromImage(self.image, Qt.AutoColor)
             scale_factor = 1.0
             if self._scale:
                 scale_factor = min(self.width() / pixmap.width(),
@@ -114,13 +113,13 @@ class MainWindow(QMainWindow):
 
         exit.triggered.connect(QApplication.instance().quit)
         open_image.triggered.connect(self._open_image)
-        scaling.triggered.connect(self._update_scaling)
+        scaling.triggered[bool].connect(self._update_scaling)
 
     def _update_scaling(self, checked):
         self.image_viewer.scale = checked
 
     def _open_image(self):
-        filename = QFileDialog.getOpenFileName(
+        filename, _ = QFileDialog.getOpenFileName(
             self, 'Open image ...', QDir.homePath(),
             "Images (*.tiff *.png *.xpm *.jpg)")
         if filename:
