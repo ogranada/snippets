@@ -93,6 +93,9 @@ model/view-programming to phonon multimedia art.
   Combines Qt4 and python-dbus to create a remote-controllable,
   single-instance systray application
 
+``qt4_foldable_checkboxes.py``
+  A special ``QTreeWidget``, which displays foldable groups of checkboxes.
+
 ``qt4_frameless_fullscreen.py``
   Create a fullscreen window without frame
 
