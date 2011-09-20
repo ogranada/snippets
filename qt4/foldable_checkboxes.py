@@ -21,9 +21,6 @@
 # DEALINGS IN THE SOFTWARE.
 
 """
-    qt4_foldable_checkboxes
-    =======================
-
     A customized QTreeWidget which provides foldable check boxes.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>

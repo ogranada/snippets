@@ -22,10 +22,7 @@
 
 
 """
-    qt4_phonon_duplicate_video
-    ==========================
-
-
+    Duplicate video streams with Phonon.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """

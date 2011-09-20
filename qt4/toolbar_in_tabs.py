@@ -22,10 +22,8 @@
 
 
 """
-    qt4_input_validation
-    ====================
-
-    Demonstrates the use of QValidator for input validation.
+    Demonstrate how to use toolbars within tabs, by adding QMainWindow
+    objects as childs.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
@@ -36,42 +34,45 @@ from __future__ import (print_function, division, unicode_literals,
 
 import sys
 
-from PySide.QtGui import (QMainWindow, QLineEdit, QDoubleValidator,
-                         QMessageBox, QApplication, QWidget,
-                         QVBoxLayout)
+from PySide.QtGui import QApplication, QMainWindow, QTabWidget
 
 
-class MyMainWindow(QMainWindow):
+class ToolbarTabWidget(QMainWindow):
+    """
+    Provides a simple tabwidget with a toolbar.
+    """
+
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
-        self.setWindowTitle('Validation example')
-        central = QWidget(self)
-        central.setLayout(QVBoxLayout(central))
-        self.edit = QLineEdit(central)
-        central.layout().addWidget(self.edit)
-        # create a validator
-        edit_validator = QDoubleValidator(self.edit)
-        # and add it to the edito widget
-        self.edit.setValidator(edit_validator)
-        self.setCentralWidget(central)
-        self.edit.returnPressed.connect(self.do_it)
+        self.setupUi()
 
-    def do_it(self):
-        QMessageBox.information(
-            self, 'Do it!', 'The input was {0}'.format(self.edit.text()))
-        number = float(self.edit.text())
-        QMessageBox.information(
-            self, 'Do it!', 'Convert to a double and add something: '
-            '{0} + 2.5 = {1}'.format(number, number+2.5))
+    def setupUi(self):
+        self.toolbar = self.addToolBar('Toolbar')
+        self.toolbar.addAction('eggs')
+
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.setupUi()
+
+    def setupUi(self):
+        self.setWindowTitle('Tab Test')
+        self.tabs = QTabWidget(self)
+        self.setCentralWidget(self.tabs)
+        # QMainWindow inherits QWidget, thus it can simply be added as child
+        # widget
+        tab = ToolbarTabWidget()
+        self.tabs.addTab(tab, 'spam')
 
 
 def main():
     app = QApplication(sys.argv)
-    window = MyMainWindow()
-    window.show()
+    mainwindow = MainWindow()
+    mainwindow.show()
     app.exec_()
 
 
 if __name__ == '__main__':
     main()
-

@@ -22,10 +22,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 """
-    qt4_thread_progress
-    ===================
-
-    Demonstrates how to use QThread together with QProgressBar to report the
+    Demonstrate how to use QThread together with QProgressBar to report the
     progress of background worker threads for longer running processes in a
     GUI.
 
@@ -38,6 +35,8 @@
     .. moduleauthor::  Christian Hausknecht <christian.hausknecht@gmx.de>
 """
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
 
 import sys
 from functools import partial

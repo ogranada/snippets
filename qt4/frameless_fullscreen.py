@@ -22,59 +22,40 @@
 
 
 """
-    qt4_toolbar_in_tabs
-    ===================
-
-    Demonstrates how to use toolbars within tabs, by adding QMainWindow
-    objects as childs.
+    How to create a frameless toplevel widget without visible mouse cursor.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
-
 
 from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 import sys
 
-from PySide.QtGui import QApplication, QMainWindow, QTabWidget
+from PySide.QtCore import Qt
+from PySide.QtGui import QApplication, QMainWindow, QMenu, QAction
 
 
-class ToolbarTabWidget(QMainWindow):
-    """
-    Provides a simple tabwidget with a toolbar.
-    """
-
+class MyMainWindow(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
-        self.setupUi()
-
-    def setupUi(self):
-        self.toolbar = self.addToolBar('Toolbar')
-        self.toolbar.addAction('eggs')
-
-
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        QMainWindow.__init__(self)
-        self.setupUi()
-
-    def setupUi(self):
-        self.setWindowTitle('Tab Test')
-        self.tabs = QTabWidget(self)
-        self.setCentralWidget(self.tabs)
-        # QMainWindow inherits QWidget, thus it can simply be added as child
-        # widget
-        tab = ToolbarTabWidget()
-        self.tabs.addTab(tab, 'spam')
+        # activate the window and use the full screen
+        self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
+        # empty the mouse cursor
+        self.setCursor(Qt.BlankCursor)
+        # add a menu to close the window
+        appmenu = QMenu('&Application', self)
+        quit = QAction('&Quit', self)
+        appmenu.addAction(quit)
+        self.menuBar().addMenu(appmenu)
+        quit.triggered.connect(QApplication.instance().quit)
 
 
 def main():
     app = QApplication(sys.argv)
-    mainwindow = MainWindow()
-    mainwindow.show()
-    app.exec_()
+    mywindow = MyMainWindow()
+    mywindow.show()
+    sys.exit(app.exec_())
 
 
 if __name__ == '__main__':

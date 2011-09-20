@@ -21,9 +21,6 @@
 
 
 """
-    qt4_xml_model
-    =============
-
     A fully-featured Qt4 model class using XML for data storage (through
     lxml).  The xml looks like the following::
 

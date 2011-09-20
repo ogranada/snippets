@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2010, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,44 +22,56 @@
 
 
 """
-    qt4_frameless_fullscreen
-    ========================
-
-    How to create a frameless toplevel widget without visible mouse cursor.
+    How to show icons in a QListView.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
+
 
 from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 import sys
 
-from PySide.QtCore import Qt
-from PySide.QtGui import QApplication, QMainWindow, QMenu, QAction
+from PySide.QtCore import Qt, QSize, QAbstractListModel
+from PySide.QtGui import QApplication, QMainWindow, QListView, QIcon
 
 
-class MyMainWindow(QMainWindow):
-    def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent)
-        # activate the window and use the full screen
-        self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
-        # empty the mouse cursor
-        self.setCursor(Qt.BlankCursor)
-        # add a menu to close the window
-        appmenu = QMenu('&Application', self)
-        quit = QAction('&Quit', self)
-        appmenu.addAction(quit)
-        self.menuBar().addMenu(appmenu)
-        quit.triggered.connect(QApplication.instance().quit)
+class IconModel(QAbstractListModel):
+    def __init__(self, pages, parent=None):
+        QAbstractListModel.__init__(self, parent)
+        self.pages = pages
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            name, icon = self.pages[index.row()]
+            if role == Qt.DisplayRole:
+                return name
+            elif role == Qt.DecorationRole and icon:
+                # return an icon, if the decoration role is used
+                return icon
+        return None
+
+    def rowCount(self, index):
+        return len(self.pages)
 
 
 def main():
     app = QApplication(sys.argv)
-    mywindow = MyMainWindow()
-    mywindow.show()
-    sys.exit(app.exec_())
+    window = QMainWindow()
+    view = QListView(window)
+    window.setCentralWidget(view)
+    view.setViewMode(QListView.IconMode)
+    view.setMovement(QListView.Static)
+    view.setIconSize(QSize(64, 64))
+    view.setModel(IconModel(
+        [('System', QIcon.fromTheme('preferences-system')),
+         ('Desktop', QIcon.fromTheme('preferences-desktop-personal'))],
+        view))
+    window.show()
+    app.exec_()
 
 
 if __name__ == '__main__':
     main()
+

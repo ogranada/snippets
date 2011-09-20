@@ -21,9 +21,6 @@
 # DEALINGS IN THE SOFTWARE.
 
 """
-    qt4_image_scaling
-    =================
-
     A custom widget, which uses the Qt painting API to draw and scale images
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>

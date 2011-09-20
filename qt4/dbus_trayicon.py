@@ -22,9 +22,6 @@
 
 
 """
-    qt4_dbus_trayicon_app
-    =====================
-
     A sample application, which uses a combination of DBus and a system tray
     icon, to keep a single instance running and allow remote control of this
     instance.

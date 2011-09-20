@@ -1,6 +1,6 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,56 +22,49 @@
 
 
 """
-    qt4_x11_key_names
-    =================
-
-    Shows how to get key names from key events on X11.
+    A little countdown clock implemented with QTime and QTimer.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
-from __future__ import (print_function, division, unicode_literals,
-                        absolute_import)
 
 import sys
-from ctypes import CDLL, c_uint, c_char_p
-from ctypes.util import find_library
 
-from PySide.QtGui import QApplication, QWidget
-
-
-libX11 = CDLL(find_library('X11'))
-libX11.XKeysymToString.argtypes = [c_uint]
-libX11.XKeysymToString.restype = c_char_p
+from PySide.QtCore import Qt, QTime, QTimer
+from PySide.QtGui import QApplication, QLabel
 
 
-class KeyNameWidget(QWidget):
+class CountdownWidget(QLabel):
+    def __init__(self, countdown, parent=None):
+        QLabel.__init__(self, parent)
+        self.countdown = countdown
+        self.setText(self.countdown.toString(Qt.ISODate))
+        # setup the countdown timer
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self._update_time)
 
-    def show_event(self, name, event):
-        keysym = event.nativeVirtualKey()
-        keyname = libX11.XKeysymToString(keysym)
-        print(name)
-        print('    Qt keycode:', event.key())
-        print('    Qt text:', unicode(event.text()))
-        print('    X11 keysym:', keysym)
-        print('    X11 keyname:', keyname)
-        print()
+    def start(self):
+        # update the display every second
+        self.timer.start(1000)
 
-
-    def keyPressEvent(self, event):
-        self.show_event('KeyPressEvent', event)
-
-    def keyReleaseEvent(self, event):
-        self.show_event('KeyReleaseEvent', event)
+    def _update_time(self):
+        # this gets called every seconds
+        # adjust the remaining time
+        self.countdown = self.countdown.addSecs(-1)
+        # if the remaining time reached zero, stop the timer
+        if self.countdown <= QTime(0, 0, 0):
+            self.timer.stop()
+        # update the display
+        self.setText(self.countdown.toString(Qt.ISODate))
 
 
 def main():
     app = QApplication(sys.argv)
-    widget = KeyNameWidget()
+    widget = CountdownWidget(QTime(0, 0, 5))
+    widget.start()
     widget.show()
     app.exec_()
 
 
 if __name__ == '__main__':
     main()
-

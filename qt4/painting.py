@@ -21,10 +21,7 @@
 
 
 """
-    qt4_painting
-    ============
-
-    Uses the Qt4 painting engine to paint a rotating spiral onto a widget.
+    Paint a rotating spiral in Qt.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """

@@ -22,10 +22,7 @@
 
 
 """
-    qt4_window_screenshot
-    =====================
-
-    Demonstrates how to take a screenshot of a QWidget.
+    A *very* simple shell widget using QProcess.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
@@ -36,36 +33,43 @@ from __future__ import (print_function, division, unicode_literals,
 
 import sys
 
-from PySide.QtCore import Slot, QMetaObject
-from PySide.QtGui import (QApplication, QMainWindow, QWidget, QLabel,
-                          QPushButton, QVBoxLayout, QPixmap)
+from PySide.QtCore import QProcess
+from PySide.QtGui import QPlainTextEdit, QApplication
 
 
-class MainWindow(QMainWindow):
+class QSimpleShellWidget(QPlainTextEdit):
     def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent)
-        central = QWidget(self)
-        layout = QVBoxLayout(central)
-        self.image_label = QLabel('here\'s the shot', central)
-        layout.addWidget(self.image_label)
-        self.button = QPushButton('Shoot me!', central)
-        self.button.setObjectName('shot_button')
-        layout.addWidget(self.button)
-        self.setCentralWidget(central)
-        QMetaObject.connectSlotsByName(self)
+        QPlainTextEdit.__init__(self, parent)
+        self.setReadOnly(True)
+        self.process = None
 
-    @Slot()
-    def on_shot_button_clicked(self):
-        self.image_label.setPixmap(QPixmap.grabWidget(self))
+    def setProcess(self, process):
+        self.clear()
+        self.process = process
+        process.readyReadStandardError.connect(self.read_output)
+        process.readyReadStandardOutput.connect(self.read_output)
 
+    def read_output(self):
+        stdout = str(self.process.readAllStandardOutput()).decode(
+            sys.getfilesystemencoding())
+        stderr = str(self.process.readAllStandardError()).decode(
+            sys.getfilesystemencoding())
+        self.appendPlainText(stderr)
+        self.appendPlainText(stdout)
+
+    def closeEvent(self, event):
+        self.process.terminate()
+        event.accept()
 
 
 def main():
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = QSimpleShellWidget()
+    proc = QProcess()
+    window.setProcess(proc)
+    proc.start('sh -c "while true; do echo foo; sleep 1; done"')
     window.show()
     app.exec_()
-
 
 if __name__ == '__main__':
     main()

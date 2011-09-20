@@ -22,9 +22,6 @@
 
 
 """
-    qt4_checkable_filesystem_model
-    ==============================
-
     Implementation of a QFileSystemModel-derived model, which adds check
     boxes to each file.  Demonstrates some more advanced model-view
     techniques.

@@ -22,14 +22,9 @@
 
 
 """
-    qt4_webkit_render_to_image
-    ==========================
-
-    Renders a website to an image.  Usage:
+    Render a website to an image.  Usage:
 
         render_image.py http://example.com /path/to/image.png
-
-    Requires PyQt 4.5 and Python 2.6.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """

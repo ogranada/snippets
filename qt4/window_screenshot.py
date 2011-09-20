@@ -22,52 +22,48 @@
 
 
 """
-    qt4_countdown
-    =============
-
-    A little countdown clock implemented with QTime and QTimer.
+    Demonstrate how to take a screenshot of a QWidget.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
 
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
 import sys
 
-from PySide.QtCore import Qt, QTime, QTimer
-from PySide.QtGui import QApplication, QLabel
+from PySide.QtCore import Slot, QMetaObject
+from PySide.QtGui import (QApplication, QMainWindow, QWidget, QLabel,
+                          QPushButton, QVBoxLayout, QPixmap)
 
 
-class CountdownWidget(QLabel):
-    def __init__(self, countdown, parent=None):
-        QLabel.__init__(self, parent)
-        self.countdown = countdown
-        self.setText(self.countdown.toString(Qt.ISODate))
-        # setup the countdown timer
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self._update_time)
+class MainWindow(QMainWindow):
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
+        central = QWidget(self)
+        layout = QVBoxLayout(central)
+        self.image_label = QLabel('here\'s the shot', central)
+        layout.addWidget(self.image_label)
+        self.button = QPushButton('Shoot me!', central)
+        self.button.setObjectName('shot_button')
+        layout.addWidget(self.button)
+        self.setCentralWidget(central)
+        QMetaObject.connectSlotsByName(self)
 
-    def start(self):
-        # update the display every second
-        self.timer.start(1000)
+    @Slot()
+    def on_shot_button_clicked(self):
+        self.image_label.setPixmap(QPixmap.grabWidget(self))
 
-    def _update_time(self):
-        # this gets called every seconds
-        # adjust the remaining time
-        self.countdown = self.countdown.addSecs(-1)
-        # if the remaining time reached zero, stop the timer
-        if self.countdown <= QTime(0, 0, 0):
-            self.timer.stop()
-        # update the display
-        self.setText(self.countdown.toString(Qt.ISODate))
 
 
 def main():
     app = QApplication(sys.argv)
-    widget = CountdownWidget(QTime(0, 0, 5))
-    widget.start()
-    widget.show()
+    window = MainWindow()
+    window.show()
     app.exec_()
 
 
 if __name__ == '__main__':
     main()
+

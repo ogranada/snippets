@@ -22,9 +22,6 @@
 
 
 """
-    qt4_phonon_audio
-    ================
-
     Implementation of a simple audio player using the Phonon framework from
     Qt4.  Requires at least Python 2.6 and Qt 4.5.
 

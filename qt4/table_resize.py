@@ -21,10 +21,7 @@
 
 
 """
-    qt4_table_resize
-    ================
-
-    Demonstrates how to derive from QTableView to resize columns, wenn the
+    Demonstrate how to derive from QTableView to resize columns, wenn the
     view is resized.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>

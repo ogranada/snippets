@@ -22,10 +22,7 @@
 
 
 """
-    qt4_table_header_alignment
-    ==========================
-
-    Demonstrates how to align text in table headers with
+    Demonstrate how to align text in table headers with
     QTableView/QAbstractTableModel and QTableWidget.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>

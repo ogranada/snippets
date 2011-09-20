@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
-# Copyright (c) 2009, 2010, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,56 +22,50 @@
 
 
 """
-    qt4_icons_listview
-    ==================
-
-    How to show icons in a QListView.
+    Shows how to get key names from key events on X11.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
-
 
 from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 import sys
+from ctypes import CDLL, c_uint, c_char_p
+from ctypes.util import find_library
 
-from PySide.QtCore import Qt, QSize, QAbstractListModel
-from PySide.QtGui import QApplication, QMainWindow, QListView, QIcon
+from PySide.QtGui import QApplication, QWidget
 
 
-class IconModel(QAbstractListModel):
-    def __init__(self, pages, parent=None):
-        QAbstractListModel.__init__(self, parent)
-        self.pages = pages
+libX11 = CDLL(find_library('X11'))
+libX11.XKeysymToString.argtypes = [c_uint]
+libX11.XKeysymToString.restype = c_char_p
 
-    def data(self, index, role=Qt.DisplayRole):
-        if index.isValid():
-            name, icon = self.pages[index.row()]
-            if role == Qt.DisplayRole:
-                return name
-            elif role == Qt.DecorationRole and icon:
-                # return an icon, if the decoration role is used
-                return icon
-        return None
 
-    def rowCount(self, index):
-        return len(self.pages)
+class KeyNameWidget(QWidget):
+
+    def show_event(self, name, event):
+        keysym = event.nativeVirtualKey()
+        keyname = libX11.XKeysymToString(keysym)
+        print(name)
+        print('    Qt keycode:', event.key())
+        print('    Qt text:', unicode(event.text()))
+        print('    X11 keysym:', keysym)
+        print('    X11 keyname:', keyname)
+        print()
+
+
+    def keyPressEvent(self, event):
+        self.show_event('KeyPressEvent', event)
+
+    def keyReleaseEvent(self, event):
+        self.show_event('KeyReleaseEvent', event)
 
 
 def main():
     app = QApplication(sys.argv)
-    window = QMainWindow()
-    view = QListView(window)
-    window.setCentralWidget(view)
-    view.setViewMode(QListView.IconMode)
-    view.setMovement(QListView.Static)
-    view.setIconSize(QSize(64, 64))
-    view.setModel(IconModel(
-        [('System', QIcon.fromTheme('preferences-system')),
-         ('Desktop', QIcon.fromTheme('preferences-desktop-personal'))],
-        view))
-    window.show()
+    widget = KeyNameWidget()
+    widget.show()
     app.exec_()
 
 

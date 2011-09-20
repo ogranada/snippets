@@ -22,10 +22,7 @@
 
 
 """
-    qt4_simple_shell_widget
-    =======================
-
-    A *very* simple shell widget using QProcess.
+    Use QValidator for input validation.
 
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
@@ -36,43 +33,41 @@ from __future__ import (print_function, division, unicode_literals,
 
 import sys
 
-from PySide.QtCore import QProcess
-from PySide.QtGui import QPlainTextEdit, QApplication
+from PySide.QtGui import (QMainWindow, QLineEdit, QDoubleValidator,
+                         QMessageBox, QApplication, QWidget,
+                         QVBoxLayout)
 
 
-class QSimpleShellWidget(QPlainTextEdit):
+class MyMainWindow(QMainWindow):
     def __init__(self, parent=None):
-        QPlainTextEdit.__init__(self, parent)
-        self.setReadOnly(True)
-        self.process = None
+        QMainWindow.__init__(self, parent)
+        self.setWindowTitle('Validation example')
+        central = QWidget(self)
+        central.setLayout(QVBoxLayout(central))
+        self.edit = QLineEdit(central)
+        central.layout().addWidget(self.edit)
+        # create a validator
+        edit_validator = QDoubleValidator(self.edit)
+        # and add it to the edito widget
+        self.edit.setValidator(edit_validator)
+        self.setCentralWidget(central)
+        self.edit.returnPressed.connect(self.do_it)
 
-    def setProcess(self, process):
-        self.clear()
-        self.process = process
-        process.readyReadStandardError.connect(self.read_output)
-        process.readyReadStandardOutput.connect(self.read_output)
-
-    def read_output(self):
-        stdout = str(self.process.readAllStandardOutput()).decode(
-            sys.getfilesystemencoding())
-        stderr = str(self.process.readAllStandardError()).decode(
-            sys.getfilesystemencoding())
-        self.appendPlainText(stderr)
-        self.appendPlainText(stdout)
-
-    def closeEvent(self, event):
-        self.process.terminate()
-        event.accept()
+    def do_it(self):
+        QMessageBox.information(
+            self, 'Do it!', 'The input was {0}'.format(self.edit.text()))
+        number = float(self.edit.text())
+        QMessageBox.information(
+            self, 'Do it!', 'Convert to a double and add something: '
+            '{0} + 2.5 = {1}'.format(number, number+2.5))
 
 
 def main():
     app = QApplication(sys.argv)
-    window = QSimpleShellWidget()
-    proc = QProcess()
-    window.setProcess(proc)
-    proc.start('sh -c "while true; do echo foo; sleep 1; done"')
+    window = MyMainWindow()
     window.show()
     app.exec_()
+
 
 if __name__ == '__main__':
     main()
