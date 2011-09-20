@@ -10,6 +10,19 @@ Qt techniques, and some show more or less clever tricks.
 Available snippets
 ==================
 
+C++ snippets
+------------
+
+``qimage_from_gdk_pixbuf.cpp``
+  Convert ``GdkPixbuf*`` to ``QImage``.
+
+
+Python snippets
+---------------
+
+These snippets use PySide, not PyQt4.
+
+
 ``checkable_filesystem_model.py``
   ``QFileSystemModel``-derived model, which adds checkboxes to file names
 

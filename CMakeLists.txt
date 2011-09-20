@@ -4,4 +4,5 @@ project(snippets)
 message(STATUS "building posix_getch snippet")
 add_executable(posix_getch posix_getch.c)
 
+add_subdirectory(qt4)
 add_subdirectory(udev)
