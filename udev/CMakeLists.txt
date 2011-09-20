@@ -24,8 +24,8 @@ if(${LIBUDEV_FOUND})
   message(STATUS "building udev_enumerate snippet")
   add_executable(udev_enumerate udev_auto_ptr.hpp udev_enumerate.cpp)
   target_link_libraries(udev_enumerate ${LIBUDEV_LIBRARIES})
-  # set_target_properties(udev_enumerate PROPERTIES
-  #   COMPILE_DEFINITIONS ${qt_no_ascii_definitions})
+  set_target_properties(udev_enumerate PROPERTIES
+    COMPILE_DEFINITIONS "${qt_no_ascii_definitions}")
   if(${QT4_FOUND})
     message(STATUS "building udev_monitor snippet")
     set(udev_monitor_sources qudevobserver.cpp udev_monitor.cpp)
@@ -33,8 +33,8 @@ if(${LIBUDEV_FOUND})
     qt4_automoc(${udev_monitor_sources})
     add_executable(udev_monitor ${udev_monitor_sources} ${udev_monitor_headers})
     target_link_libraries(udev_monitor QtCore ${LIBUDEV_LIBRARIES})
-    # set_target_properties(udev_monitor PROPERTIES
-    #   COMPILE_DEFINITIONS ${qt_no_ascii_definitions})
+    set_target_properties(udev_monitor PROPERTIES
+      COMPILE_DEFINITIONS "${qt_no_ascii_definitions}")
   else(${QT4_FOUND})
     message(STATUS "skipping udev_monitor snippet, QtCore not found")
   endif(${QT4_FOUND})
