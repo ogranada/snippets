@@ -35,16 +35,12 @@ extern "C" {
 #include <QtCore/QtDebug>
 
 
-gboolean save_to_byte_array(const gchar *data, gsize size,
-                            GError **error, gpointer buffer_ptr) {
-    Q_UNUSED(error);
-    QByteArray *buffer = static_cast<QByteArray*>(buffer_ptr);
-    Q_ASSERT(buffer);
-    buffer->append(data, size);
-    return TRUE;
-}
-
-
+/**
+ * @brief Convert a GdkPixbuf to a QImage.
+ *
+ * @param pixbuf the GdkPixbuf to convert
+ * @return the converted image, or a null QImage in case of error
+ */
 QImage toQImage(GdkPixbuf *pixbuf) {
     gchar *buffer;
     gsize buffer_size;
