@@ -20,7 +20,9 @@ C++ snippets
 Python snippets
 ---------------
 
-These snippets use PySide, not PyQt4.
+.. note::
+
+   Most of these snippets are written with PySide, not PyQt4.
 
 
 ``checkable_filesystem_model.py``
@@ -74,6 +76,9 @@ These snippets use PySide, not PyQt4.
 ``tcp_socket.py``
   Illustrates the use of Qt4's tcp network facilities by implementing a very
   simple chat program
+
+``text_editor.py`` and ``text_editor.ui``
+  A simple plani text editor.
 
 ``thread_progress.py``
   A basic example for background threads and progress reporting with
