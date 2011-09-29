@@ -44,6 +44,7 @@ from PyQt4.QtGui import (QApplication, QMainWindow,
 
 
 APP_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+MODULE_NAME = os.path.splitext(os.path.basename(__file__))[0]
 
 
 class TextEditor(QMainWindow):
@@ -90,7 +91,7 @@ class TextEditor(QMainWindow):
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
-        loadUi(os.path.join(APP_DIRECTORY, 'texteditor.ui'), self)
+        loadUi(os.path.join(APP_DIRECTORY, MODULE_NAME+'.ui'), self)
         self.setupActions()
         self.setupEditor()
         self.setupStatusBar()
