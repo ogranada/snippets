@@ -24,5 +24,10 @@ if(${QT4_FOUND})
       COMPILE_DEFINITIONS "QT_NO_CAST_FROM_ASCII;QT_NO_CAST_TO_ASCII")
     target_link_libraries(qimage_from_gdk_pixbuf
       ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${GDKPIXBUF_LIBRARIES})
+  else()
+    message(STATUS
+      "skipping qimage_from_gdk_pixbuf snippet, gdk-pixbuf not found")
   endif()
+else()
+  message(STATUS "skipping qimage_from_gdk_pixbuf snippet, Qt not found")
 endif()
