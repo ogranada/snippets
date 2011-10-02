@@ -250,7 +250,8 @@ class TextEditor(QMainWindow):
             return
         self.editor.clear()
         self.currentFilename = None
-        self.editor.document().setModified(False)
+        self.setWindowModified(False)
+        self.actionSave.setEnabled(False)
 
     def saveFile(self):
         if self.currentFilename:
