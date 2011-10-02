@@ -9,14 +9,14 @@ if(${PKG_CONFIG_FOUND})
   if(${LIBUDEV_FOUND})
     include_directories(${LIBUDEV_INCLUDE_DIRS})
     link_directories(${LIBUDEV_LIBRARY_DIRS})
-  endif(${LIBUDEV_FOUND})
-endif(${PKG_CONFIG_FOUND})
+  endif()
+endif()
 
 set(QT_USE_IMPORTED_TARGETS ON)
 find_package(Qt4 COMPONENTS QtCore)
 if(${QT4_FOUND})
   include(${QT_USE_FILE})
-endif(${QT4_FOUND})
+endif()
 
 set(qt_no_ascii_definitions QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII)
 
@@ -32,16 +32,17 @@ if(${LIBUDEV_FOUND})
     set(udev_monitor_headers udev_auto_ptr.hpp qudevobserver.h udev_monitor.h)
     qt4_automoc(${udev_monitor_sources})
     add_executable(udev_monitor ${udev_monitor_sources} ${udev_monitor_headers})
-    target_link_libraries(udev_monitor QtCore ${LIBUDEV_LIBRARIES})
+    target_link_libraries(udev_monitor
+      ${QT_QTCORE_LIBRARY} ${LIBUDEV_LIBRARIES})
     set_target_properties(udev_monitor PROPERTIES
       COMPILE_DEFINITIONS "${qt_no_ascii_definitions}")
-  else(${QT4_FOUND})
+  else()
     message(STATUS "skipping udev_monitor snippet, QtCore not found")
-  endif(${QT4_FOUND})
-else(${LIBUDEV_FOUND})
+  endif()
+else()
   message(STATUS
     "skipping udev_enumerate and udev_monitor snippets, libudev not found")
-endif(${LIBUDEV_FOUND})
+endif()
 
 
 
