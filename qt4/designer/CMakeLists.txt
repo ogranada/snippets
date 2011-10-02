@@ -3,13 +3,13 @@ project(snippets-designer-qt4)
 
 set(QT_USE_IMPORTED_TARGETS ON)
 find_package(Qt4 COMPONENTS QtCore QtGui)
-if(${QT4_FOUND})
+if(QT4_FOUND)
   include(${QT_USE_FILE})
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-if(${QT4_FOUND})
+if(QT4_FOUND)
   message(STATUS "building qt4_static snippet")
   qt4_automoc(mainwindow.cpp)
   qt4_wrap_ui(qt4_static_uis mainwindow.ui)
