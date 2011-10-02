@@ -242,7 +242,6 @@ class TextEditor(QMainWindow):
             return self.askSaveFile()
 
     def askSaveFile(self):
-        ask = ask or not bool(self.currentFilename)
         if self.currentFilename:
             directory = os.path.dirname(self.currentFilename)
         else:
