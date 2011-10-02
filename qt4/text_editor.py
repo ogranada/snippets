@@ -30,21 +30,32 @@ import os
 from functools import partial
 from codecs import open
 
-import sip
-sip.setapi('QString', 2)
-sip.setapi('QVariant', 2)
-from PyQt4.uic import loadUi
-from PyQt4.QtCore import pyqtProperty, QSettings
-from PyQt4.QtGui import (QApplication, QMainWindow,
-                         QFileDialog, QInputDialog, QMessageBox,
-                         QPrintPreviewDialog, QLabel,
-                         QAction, QKeySequence, QIcon,
-                         QTextDocument, QTextCursor,
-                         QDesktopServices, QPrinter)
+from PySide.QtUiTools import QUiLoader
+from PySide.QtCore import Property, QSettings
+from PySide.QtGui import (QApplication, QMainWindow,
+                          QFileDialog, QInputDialog, QMessageBox,
+                          QPrintPreviewDialog, QLabel,
+                          QAction, QKeySequence, QIcon,
+                          QTextDocument, QTextCursor,
+                          QDesktopServices)
 
 
 APP_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 MODULE_NAME = os.path.splitext(os.path.basename(__file__))[0]
+
+
+class UiLoader(QUiLoader):
+    def __init__(self, baseinstance):
+        QUiLoader.__init__(self, baseinstance)
+        self.baseinstance = baseinstance
+
+    def createWidget(self, class_name, parent=None, name=''):
+        if parent is None:
+            return self.baseinstance
+        else:
+            widget = QUiLoader.createWidget(self, class_name, parent, name)
+            setattr(self.baseinstance, name, widget)
+            return widget
 
 
 class TextEditor(QMainWindow):
@@ -91,7 +102,12 @@ class TextEditor(QMainWindow):
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
-        loadUi(os.path.join(APP_DIRECTORY, MODULE_NAME+'.ui'), self)
+        uifile = os.path.join(APP_DIRECTORY, MODULE_NAME+'.ui')
+        loader = UiLoader(self)
+        loader.load(uifile)
+        # unset the window title to enable the automatic window title
+        # constructed from windowFilePath and windowModified
+        self.setWindowTitle('')
         self.setupActions()
         self.setupEditor()
         self.setupStatusBar()
@@ -156,16 +172,16 @@ class TextEditor(QMainWindow):
         self.settings.setValue('search/case_sensitive',
                                self.searchCaseSensitive.isChecked())
 
-    @pyqtProperty(unicode)
+    @Property(unicode)
     def currentFilename(self):
         return self.editor.document().metaInformation(
             QTextDocument.DocumentUrl)
 
     @currentFilename.setter
-    def currentFilename(self, filename):
+    def setCurrentFilename(self, filename):
         self.editor.document().setMetaInformation(
             QTextDocument.DocumentUrl, filename)
-        self.setWindowFilePath(filename)
+        self.setWindowFilePath(filename or self.trUtf8('untitled'))
 
     def save(self, filename=None):
         filename = filename or self.currentFilename
@@ -176,8 +192,8 @@ class TextEditor(QMainWindow):
             with open(filename, 'w', encoding=encoding) as stream:
                 stream.write(self.editor.toPlainText())
         except EnvironmentError as error:
-            QMessageBox.critical(self, self.tr('Save file'), self.tr(
-                'Could not save <tt>{filename}</tt>: {message}').format(
+            QMessageBox.critical(self, self.trUtf8(b'Save file'), self.trUtf8(
+                b'Could not save <tt>{filename}</tt>: {message}').format(
                     filename=filename, message=error.strerror))
             return False
         else:
@@ -193,14 +209,14 @@ class TextEditor(QMainWindow):
             self.currentFilename = filename
             return True
         except EnvironmentError as error:
-            QMessageBox.critical(self, self.tr('Open file'), self.tr(
-                'Could not open <tt>{filename}</tt>: {message}').format(
+            QMessageBox.critical(self, self.trUtf8('Open file'), self.trUtf8(
+                b'Could not open <tt>{filename}</tt>: {message}').format(
                     filename=filename, message=error.strerror))
             return False
 
     def print(self, printer):
         printer.setDocName(self.windowFilePath())
-        self.editor.print(printer)
+        self.editor.print_(printer)
 
     def goToLine(self, line):
         block = self.editor.document().findBlockByLNumber(line)
@@ -210,7 +226,7 @@ class TextEditor(QMainWindow):
 
     def updateStatusBar(self):
         cursor = self.editor.textCursor()
-        cursor_position = self.tr('({line},{column},{offset})').format(
+        cursor_position = self.trUtf8(b'({line},{column},{offset})').format(
             line=cursor.blockNumber(), column=cursor.columnNumber(),
             offset=cursor.position())
         self.cursorPositionLabel.setText(cursor_position)
@@ -218,9 +234,9 @@ class TextEditor(QMainWindow):
     def askSaveChanges(self):
         if self.editor.document().isModified():
             response = QMessageBox.warning(
-                self, self.tr('Save changes?'),
-                self.tr('The document has been modified.\n'
-                        'Do you want to save your changes?'),
+                self, self.trUtf8(b'Save changes?'),
+                self.trUtf8(b'The document has been modified.\n'
+                            'Do you want to save your changes?'),
                 QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                 QMessageBox.Save)
             if response == QMessageBox.Cancel:
@@ -234,6 +250,7 @@ class TextEditor(QMainWindow):
             return
         self.editor.clear()
         self.currentFilename = None
+        self.editor.document().setModified(False)
 
     def saveFile(self):
         if self.currentFilename:
@@ -247,25 +264,25 @@ class TextEditor(QMainWindow):
         else:
             directory = QDesktopServices.storageLocation(
                 QDesktopServices.DocumentsLocation)
-        filename = QFileDialog.getSaveFileName(
-            self, self.tr('Save file'), directory)
+        filename, selected_filter = QFileDialog.getSaveFileName(
+            self, self.trUtf8(b'Save file'), directory)
         if not filename:
             return False
-        return self.saveFile(filename)
+        return self.saveFile()
 
     def askOpenFile(self):
         if not self.askSaveChanges():
             return
         directory = QDesktopServices.storageLocation(
             QDesktopServices.DocumentsLocation)
-        filename = QFileDialog.getOpenFileName(
-            self, self.tr('Open file'), directory)
+        filename, selected_filter = QFileDialog.getOpenFileName(
+            self, self.trUtf8(b'Open file'), directory)
         if filename:
             self.load(filename)
 
     def askGoToLine(self):
         line, ok = QInputDialog.getInt(
-            self, self.tr('Goto line'), self.tr('Line number:'),
+            self, self.trUtf8(b'Goto line'), self.trUtf8(b'Line number:'),
             self.editor.textCursor().blockNumber(), 1,
             self.editor.document().blockCount())
         if ok:
@@ -310,8 +327,8 @@ class TextEditor(QMainWindow):
         app = QApplication.instance()
         args = {'name': app.applicationName(),
                 'version': app.applicationVersion()}
-        title = self.tr('{name} {version}').format(**args)
-        text = self.tr("""\
+        title = self.trUtf8(b'{name} {version}').format(**args)
+        text = self.trUtf8("""\
 <h1>{name} {version}</h1>
 
 <p>An trivial text editor implemented in Qt</p>
