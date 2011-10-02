@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(snippets-udev)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(PkgConfig)
 if(${PKG_CONFIG_FOUND})
