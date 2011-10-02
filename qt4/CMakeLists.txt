@@ -31,3 +31,5 @@ if(${QT4_FOUND})
 else()
   message(STATUS "skipping qimage_from_gdk_pixbuf snippet, Qt not found")
 endif()
+
+add_subdirectory(designer)

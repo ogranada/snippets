@@ -10,6 +10,13 @@ Qt techniques, and some show more or less clever tricks.
 Available snippets
 ==================
 
+Designer usage
+--------------
+
+The subdirectory ``designer/`` demonstrates how to use UI files created with
+the Qt designer in C++ and Python.
+
+
 C++ snippets
 ------------
 
