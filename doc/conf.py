@@ -56,13 +56,14 @@ primary_domain = 'snip'
 
 pygments_style = 'sphinx'
 html_theme = 'agogo'
+html_title = 'Snippets'
 
 intersphinx_mapping = {'python': ('http://docs.python.org/', None),
                        'pyudev': ('http://packages.python.org/pyudev', None),
                        'pyside': ('http://www.pyside.org/docs/pyside/', None)}
 
 extlinks = {
-    'github': ('https://github.com/lunaryorn/snippets/%s', ''),
+    'github': (baseurl + '/%s', ''),
 }
 
 snippet_source_url = baseurl + '/blob/master/{snippet}'
