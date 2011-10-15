@@ -11,7 +11,7 @@ Avialable snippets
 Designer usage
 --------------
 
-The subdirectory :dir:`qt4/designer` demonstrates how to use UI files created
+The subdirectory :dir:`~qt4/designer` demonstrates how to use UI files created
 with the Qt designer in C++ and Python.
 
 

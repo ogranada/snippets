@@ -154,6 +154,12 @@ class DirectoryXRefRole(XRefRole):
 
     def process_link(self, env, refnode, has_explicit_title, title, target):
         if not has_explicit_title:
+            target = target.lstrip('~')
+            if title.startswith('~'):
+                # remove all directory parts execpt the last one.  Need to
+                # normalize first to remove any trailing slash
+                _, title = posixpath.split(
+                    posixpath.normpath(title.lstrip('~')))
             title = normalized_directory_name(title)
         return title, target
 
