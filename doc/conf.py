@@ -58,6 +58,7 @@ pygments_style = 'sphinx'
 html_theme = 'agogo'
 
 intersphinx_mapping = {'python': ('http://docs.python.org/', None),
+                       'pyudev': ('http://packages.python.org/pyudev', None),
                        'pyside': ('http://www.pyside.org/docs/pyside/', None)}
 
 extlinks = {

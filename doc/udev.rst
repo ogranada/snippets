@@ -37,7 +37,8 @@ additions and removals.
 
 .. snippet:: udev_monitor.py
 
-   Python with pyudev_ and PySide_
+   Python with pyudev_ and PySide_, using :py:class:`pyudev.Monitor` and
+   :py:class:`pyudev.pyside.QUDevMonitorObserver`
 
 .. snippet:: udev_monitor.h
              udev_monitor.cpp
