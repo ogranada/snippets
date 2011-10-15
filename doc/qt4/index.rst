@@ -33,11 +33,12 @@ Python snippets
 
 .. snippet:: checkable_filesystem_model.py
 
-  ``QFileSystemModel``-derived model, which adds checkboxes to file names
+   :py:class:`~PySide.QtGui.QFileSystemModel`\ -derived model, which adds
+   checkboxes to file names
 
 .. snippet:: countdown.py
 
-  A simple PyQt4 countdown clock
+  A simple countdown clock
 
 .. snippet:: dbus_trayicon.py
 
@@ -46,7 +47,8 @@ Python snippets
 
 .. snippet:: foldable_checkboxes.py
 
-  A special ``QTreeWidget``, which displays foldable groups of checkboxes.
+  A special :py:class:`~PySide.QtGui.QTreeWidget`, which displays foldable
+  groups of checkboxes.
 
 .. snippet:: frameless_fullscreen.py
 
@@ -58,7 +60,7 @@ Python snippets
 
 .. snippet:: icons_listview.py
 
-  The art of having icons in your ``QListView``
+  The art of having icons in your :py:class:`~PySide.QtGui.QListView`
 
 .. snippet:: image_scaling.py
 
@@ -66,33 +68,34 @@ Python snippets
 
 .. snippet:: input_validation.py
 
-  Validating input using custom ``QValidator``\ s
+  Validating input using a custom :py:class:`~PySide.QtGui.QValidator`
 
 .. snippet:: phonon_audio.py
 
-  Using Phonon and PyQt4 to create a very simple audio player
+  Using :py:class:`~PySide.phonon.Phonon` to create a very simple audio player
 
 .. snippet:: phonon_duplicate_video.py
 
-  Duplicate video streams to different playback widgets using PyQt4 and
-  Phonon (requires GStreamer backend)
+  Duplicate video streams to different playback widgets using
+  :py:mod:`~PySide.phonon.Phonon` (requires GStreamer backend)
 
 .. snippet:: phonon_video.py
 
-  Using Phonon and PyQt4 to create a very simple video player
+  Using :py:mod:`~PySide.phonon.Phonon` to create a very simple video player
 
 .. snippet:: simple_shell_widget.py
 
-  Live catching of subprocess output using ``QProcess``
+  Live catching of subprocess output using :py:class:`~PySide.QtCore.QProcess`
 
 .. snippet:: table_header_alignment.py
 
-  Controlling the alignment of table headers ``QTableView``
+  Controlling the alignment of table headers
+  :py:class:`~PySide.QtGui.QTableView`
 
 .. snippet:: table_resize.py
 
-  A simple ``QTableView``-derived class, which resizes columns
-  automatically, if the view is resized
+  A simple :py:class:`~PySide.QtGui.QTableView`-derived class, which resizes
+  columns automatically, if the view is resized
 
 .. snippet:: tcp_socket.py
 
@@ -107,15 +110,16 @@ Python snippets
 .. snippet:: thread_progress.py
 
   A basic example for background threads and progress reporting with
-  ``QProgressBar`` and ``QThread``
+  :py:class:`~PySide.QtGui.QProgressBar` and :py:class:`~PySide.QtCore.QThread`
 
 .. snippet:: toolbar_in_tabs.py
 
-  Using toolbars within a ``QTabWidget`` with a bit of a dirty trick
+  Using toolbars within a :py:class:`~PySide.QtGui.QTabWidget` with a bit of a
+  dirty trick
 
 .. snippet:: webkit_render_to_image.py
 
-  render a website to an image file using PyQt4 and QtWebkit
+  render a website to an image file using :py:mod:`~PySide.QtWebkit`
 
 .. snippet:: window_screenshot.py
 

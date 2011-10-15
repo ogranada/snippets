@@ -57,7 +57,8 @@ primary_domain = 'snip'
 pygments_style = 'sphinx'
 html_theme = 'agogo'
 
-# intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'python': ('http://docs.python.org/', None),
+                       'pyside': ('http://www.pyside.org/docs/pyside/', None)}
 
 extlinks = {
     'github': ('https://github.com/lunaryorn/snippets/%s', ''),
