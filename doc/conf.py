@@ -67,3 +67,15 @@ extlinks = {
 }
 
 snippet_source_url = baseurl + '/blob/master/{snippet}'
+
+
+def inhibit_jenkyll(app, _exception):
+    if app.builder.name != 'html':
+        return
+    filename = os.path.join(app.outdir, '.nojekyll')
+    # create an emit file
+    open(filename, 'wb').close()
+
+
+def setup(app):
+    app.connect(b'build-finished', inhibit_jenkyll)
