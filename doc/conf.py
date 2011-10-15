@@ -33,7 +33,6 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
 source_suffix = '.rst'
 master_doc = 'index'
 
-baseurl = 'https://github.com/lunaryorn/snippets'
 project = u'Snippets'
 copyright = u'2011, Sebastian Wiesner'
 
@@ -63,10 +62,10 @@ intersphinx_mapping = {'python': ('http://docs.python.org/', None),
                        'pyside': ('http://www.pyside.org/docs/pyside/', None)}
 
 extlinks = {
-    'github': (baseurl + '/%s', ''),
+    'github': ('https://github.com/lunaryorn/snippets/%s', ''),
 }
 
-snippet_source_url = baseurl + '/blob/master/{snippet}'
+snippet_source_url = 'https://github.com/lunaryorn/snippets/blob/master/{snippet}'
 
 
 def inhibit_jenkyll(app, _exception):

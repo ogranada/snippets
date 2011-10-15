@@ -5,11 +5,11 @@
 This site provides code snippets for various languages, libraries and
 techniques.
 
-The source code of the snippets is located in a :github:`GitHub repository
-</>`.  This documentation is generated from commit |changeset| in this
-repository.  Please :github:`report issues <issues>` or send :github:`pull
-requests <pulls>`, if you've created a snippet you'd like to see in this
-collection.
+The source code of the snippets is located in a `GitHub Repository
+<https://github.com/lunaryorn/snippets>`_.  This documentation is generated
+from commit |changeset| in this repository.  Please :github:`report issues
+<issues>` or send :github:`pull requests <pulls>`, if you've created a snippet
+you'd like to see in this collection.
 
 
 Available snippets
