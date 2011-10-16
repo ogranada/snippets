@@ -54,7 +54,7 @@ Python snippets
 
   Create a fullscreen window without frame
 
-.. snippet:: painiting.py
+.. snippet:: painting.py
 
   Paint a rotating spiral to demonstrate the Qt4 painting API
 
