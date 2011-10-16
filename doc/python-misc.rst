@@ -36,10 +36,6 @@ Available snippets
 
   Flattens nested lists
 
-.. snippet:: forking.py
-
-  Classic unix double `fork(3)`_ for daemonizing
-
 .. snippet:: magic_database.py
 
   Detect mimetype and encoding of files using the Python binding of libmagic_
@@ -86,7 +82,6 @@ Available snippets
 .. _easy_install: http://packages.python.org/distribute/easy_install.html
 .. _pip: http://pip-installer.org
 .. _distribute: http://packages.python.org/distribute/index.html
-.. _fork(3): http://linux.die.net/man/3/fork
 .. _libmagic: http://www.darwinsys.com/file/
 .. _one-time pad: http://en.wikipedia.org/wiki/One_Time_Pad
 .. _ping(8): http://linux.die.net/man/8/ping
