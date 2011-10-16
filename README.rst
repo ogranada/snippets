@@ -2,6 +2,6 @@
  Snippets
 ==========
 
-http://lunaryorn.github.com/snippets
+http://snippets.lunaryorn.de
 
 A collection of source code snippets.
