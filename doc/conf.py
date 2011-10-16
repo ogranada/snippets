@@ -66,24 +66,3 @@ extlinks = {
 }
 
 snippet_source_url = 'https://github.com/lunaryorn/snippets/blob/master/{snippet}'
-
-
-def write_cname(app, _exception):
-    if app.builder.name != 'html':
-        return
-    filename = os.path.join(app.outdir, 'CNAME')
-    with open(filename, 'w') as stream:
-        stream.write('snippets.lunaryorn.de\n')
-
-
-def inhibit_jenkyll(app, _exception):
-    if app.builder.name != 'html':
-        return
-    filename = os.path.join(app.outdir, '.nojekyll')
-    # create an emit file
-    open(filename, 'wb').close()
-
-
-def setup(app):
-    app.connect(b'build-finished', inhibit_jenkyll)
-    app.connect(b'build-finished', write_cname)
