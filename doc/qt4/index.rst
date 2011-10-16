@@ -20,7 +20,7 @@ C++ snippets
 
 .. snippet:: qimage_from_gdk_pixbuf.cpp
 
-  Convert ``GdkPixbuf*`` to ``QImage``.
+  Convert GdkPixbuf_ (from GDK-PixBuf_ library) to QImage_.
 
 
 Python snippets
@@ -140,4 +140,7 @@ Python snippets
    designer
 
 
+.. _GdkPixbuf: http://developer.gnome.org/gdk-pixbuf/stable/gdk-pixbuf-The-GdkPixbuf-Structure.html
+.. _GDK-PixBuf: http://developer.gnome.org/gdk-pixbuf/stable/
+.. _QImage: http://doc.qt.nokia.com/latest/qimage.html
 .. include:: ../references.rst
