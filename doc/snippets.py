@@ -32,13 +32,15 @@ from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 import posixpath
-from collections import namedtuple
+from operator import itemgetter
+from itertools import groupby
+from collections import namedtuple, defaultdict
 
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx import addnodes
 from sphinx.roles import XRefRole
-from sphinx.domains import Domain, ObjType
+from sphinx.domains import Domain, ObjType, Index
 from sphinx.directives import ObjectDescription
 from sphinx.util.compat import Directive
 from sphinx.util.nodes import make_refnode
@@ -51,6 +53,9 @@ DirectoryEntry = namedtuple('DirectoryEntry', 'docname')
 
 
 def normalized_snippet_name(name, directory=None):
+    """
+    Return the normalized snippet ``name``, prepending ``directory``, if given.
+    """
     if directory:
         snippet = posixpath.join(directory, name)
     else:
@@ -59,10 +64,28 @@ def normalized_snippet_name(name, directory=None):
 
 
 def normalized_directory_name(directory):
-    return posixpath.normpath(directory) + '/'
+    """
+    Return the normalized ``directory`` name.
+
+    Normalized directory names always end with a slash.
+    """
+    return posixpath.normpath(directory) + posixpath.sep
+
+
+def is_directory_name(name):
+    """
+    Check, if ``name`` is a directory name, meaning that it ends with a slash.
+
+    Return ``True``, if ``name`` is a directory name, ``False`` otherwise.
+    """
+    return name.endswith(posixpath.sep)
 
 
 class SnippetDirectory(Directive):
+    """
+    A directive for snippet directories.
+    """
+
     has_content = False
     required_arguments = 1
     optional_arguments = 0
@@ -77,6 +100,7 @@ class SnippetDirectory(Directive):
         env.temp_data['snip:directory'] = directory
 
         if 'noindex' not in self.options:
+            # create an index entry
             directories = env.domaindata['snip']['directories']
             directories[directory] = DirectoryEntry(env.docname)
             target = nodes.target('', '', ids=[directory])
@@ -164,6 +188,91 @@ class DirectoryXRefRole(XRefRole):
         return title, target
 
 
+class IndexEntry(namedtuple(
+    'IndexEntry', 'name docname anchor extra subentries')):
+
+    def to_index_tuple(self, toplevel=False):
+        if self.subentries:
+            index_type = 1
+        else:
+            index_type = 0 if toplevel else 2
+        return (self.name, index_type, self.docname,
+                self.anchor, self.extra, '', '')
+
+
+def group_by_first_letter(item):
+    return item.lower()[0]
+
+
+class SnippetIndex(Index):
+
+    name = 'snipindex'
+    localname = 'Snippets index'
+    shortname = 'snippets'
+
+    def make_directory_entry(self, directory, name=None):
+        name = normalized_directory_name(name or directory)
+        try:
+            docname, anchor = self.domain.get_directory_location(directory)
+        except KeyError:
+            docname = anchor = ''
+        return IndexEntry(name, docname, anchor, 'directory', {})
+
+    def make_snippet_entry(self, snippet, name=None):
+        name = name or snippet
+        docname, anchor = self.domain.get_snippet_location(snippet)
+        return IndexEntry(name, docname, anchor, '', None)
+
+    def make_entry(self, target, name=None):
+        if is_directory_name(target):
+            return self.make_directory_entry(target, name)
+        else:
+            return self.make_snippet_entry(target, name)
+
+    def add_entry(self, index_tree, target):
+        parts = target.split(posixpath.sep, 1)
+        if len(parts) > 1 and parts[1]:
+            directory, name = parts
+            directory = normalized_directory_name(directory)
+            entry = index_tree.setdefault(
+                directory, self.make_directory_entry(directory))
+            target_tree = entry.subentries
+        else:
+            name = target
+            target_tree = index_tree
+
+        entry = self.make_entry(target, name)
+        target_tree.setdefault(target, entry)
+
+    def generate_index_tree(self):
+        index_tree = {}
+        # add all snippets
+        for snippet in self.domain.data['snippets']:
+            self.add_entry(index_tree, snippet)
+        # add directories
+        for directory in self.domain.data['directories']:
+            self.add_entry(index_tree, directory)
+        return index_tree
+
+    def generate(self, docnames=None):
+        index_tree = self.generate_index_tree()
+        index_names = sorted(index_tree, key=lambda x: x.lower())
+        content = []
+        for letter, names in groupby(index_names, group_by_first_letter):
+            letter_entries = []
+            for name in names:
+                entry = index_tree[name]
+                letter_entries.append(entry.to_index_tuple(toplevel=True))
+                if entry.subentries:
+                    sub_names = sorted(entry.subentries,
+                                       key=lambda x: x.lower())
+                    for sub_name in sub_names:
+                        letter_entries.append(
+                            entry.subentries[sub_name].to_index_tuple())
+            content.append((letter, letter_entries))
+        return content, False
+
+
 class SnippetDomain(Domain):
 
     name = 'snip'
@@ -188,6 +297,18 @@ class SnippetDomain(Domain):
         'snippets': {},
         'directories': {},
     }
+
+    indices = [SnippetIndex]
+
+    def get_snippet_location(self, snippet):
+        snippet = normalized_snippet_name(snippet)
+        docname = self.data['snippets'][snippet].docname
+        return (docname, snippet)
+
+    def get_directory_location(self, directory):
+        directory = normalized_directory_name(directory)
+        docname = self.data['directories'][directory].docname
+        return (docname, directory)
 
     def clear_doc(self, docname):
         for snippet, entry in self.data['snippets'].items():
