@@ -61,6 +61,7 @@ QImage toQImage(GdkPixbuf *pixbuf) {
         const QByteArray data = QByteArray::fromRawData(buffer, buffer_size);
         QImage image;
         image.loadFromData(data);
+        g_free(buffer);
         return image;
     }
 }
