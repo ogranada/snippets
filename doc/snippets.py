@@ -208,7 +208,7 @@ def group_by_first_letter(item):
 
 class SnippetIndex(Index):
 
-    name = 'snipindex'
+    name = 'index'
     localname = 'Snippets index'
     shortname = 'snippets'
 
