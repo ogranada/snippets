@@ -23,6 +23,9 @@ Available snippets
    udev
    misc
 
+Refer to the `snippet index <snip-index.html>`_ for a complete list of all
+available snippets.
+
 
 Qt4 snippets
 ------------
