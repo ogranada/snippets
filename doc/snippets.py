@@ -47,7 +47,7 @@ from sphinx.util.nodes import make_refnode
 
 
 
-SnippetEntry = namedtuple('SnippetEntry', 'docname')
+SnippetEntry = namedtuple('SnippetEntry', 'docname synopsis')
 
 DirectoryEntry = namedtuple('DirectoryEntry', 'docname')
 
@@ -118,6 +118,7 @@ class Snippet(ObjectDescription):
     option_spec = {
         'noindex': directives.flag,
         'directory': directives.unchanged,
+        'synopsis': directives.unchanged,
     }
 
     def handle_signature(self, sig, signode):
@@ -151,7 +152,8 @@ class Snippet(ObjectDescription):
                 line=self.lineno)
         signode['first'] = not self.names
         signode['ids'].append(snippet)
-        snippets[snippet] = SnippetEntry(self.env.docname)
+        snippets[snippet] = SnippetEntry(
+            self.env.docname, self.options.get('synopsis', ''))
 
         directory, basename = posixpath.split(snippet)
         if directory:
@@ -189,7 +191,7 @@ class DirectoryXRefRole(XRefRole):
 
 
 class IndexEntry(namedtuple(
-    'IndexEntry', 'name docname anchor extra subentries')):
+    'IndexEntry', 'name docname anchor extra description subentries')):
 
     def to_index_tuple(self, toplevel=False):
         if self.subentries:
@@ -197,7 +199,7 @@ class IndexEntry(namedtuple(
         else:
             index_type = 0 if toplevel else 2
         return (self.name, index_type, self.docname,
-                self.anchor, self.extra, '', '')
+                self.anchor, self.extra, '', self.description)
 
 
 def group_by_first_letter(item):
@@ -216,12 +218,13 @@ class SnippetIndex(Index):
             docname, anchor = self.domain.get_directory_location(directory)
         except KeyError:
             docname = anchor = ''
-        return IndexEntry(name, docname, anchor, 'directory', {})
+        return IndexEntry(name, docname, anchor, 'directory', '', {})
 
     def make_snippet_entry(self, snippet, name=None):
         name = name or snippet
         docname, anchor = self.domain.get_snippet_location(snippet)
-        return IndexEntry(name, docname, anchor, '', None)
+        synopsis = self.domain.get_snippet_synopsis(snippet)
+        return IndexEntry(name, docname, anchor, '', synopsis, None)
 
     def make_entry(self, target, name=None):
         if is_directory_name(target):
@@ -278,6 +281,8 @@ class SnippetDomain(Domain):
     name = 'snip'
     label = 'Snippet'
 
+    data_version = 2
+
     object_types = {
         'snippet': ObjType('Snippet', 'snippet'),
         'directory': ObjType('Directory', 'dir'),
@@ -304,6 +309,9 @@ class SnippetDomain(Domain):
         snippet = normalized_snippet_name(snippet)
         docname = self.data['snippets'][snippet].docname
         return (docname, snippet)
+
+    def get_snippet_synopsis(self, snippet):
+        return self.data['snippets'][snippet].synopsis
 
     def get_directory_location(self, directory):
         directory = normalized_directory_name(directory)

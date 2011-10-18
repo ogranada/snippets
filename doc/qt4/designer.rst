@@ -20,10 +20,12 @@ respectively.  Both snippets are written in Python 2.
 
 
 .. snippet:: pyqt4_dynamic.py
+   :synopsis: User interface loading in PyQt4
 
    Dynamically load a user interface in PyQt4_.
 
 .. snippet:: pyside_dynamic.py
+   :synopsis: User interface loading in PySide
 
    Dynamically load a user interface in PySide_.
 
@@ -40,11 +42,13 @@ macro to invoke ``uic``, take a look at ``CMakeLists.txt``.
 .. snippet:: mainwindow.h
              mainwindow.cpp
              qt4_static.cpp
+   :synopsis: User interface loading in Qt4 with C++
 
    Compile and use a user interface in C++.
 
 
 .. snippet:: CMakeLists.txt
+   :synopsis: Compile user interface files
 
    Build :snippet:`qt4_static.cpp`.
 

@@ -13,68 +13,83 @@ Available snippets
 ==================
 
 .. snippet:: advanced_readline_usage.py
+   :synopsis: readline usage
 
-  :py:mod:`readline` fun
+   :py:mod:`readline` fun
 
 .. snippet:: conftool.py
+   :synopsis: command line configuration editor
 
-  A command-line configuration editor using configobj_
+   A command-line configuration editor using configobj_
 
 .. snippet:: du.py
+   :synopsis: disk usage tool
 
-  PoC `du(1)`_ implementation (somewhere from usenet)
+   PoC `du(1)`_ implementation (somewhere from usenet)
 
 .. snippet:: easy_uninstall.py
+   :synopsis: PoC egg uninstallation
 
-  PoC uninstall implementation for `easy\_install`_.
+   PoC uninstall implementation for `easy\_install`_.
 
-  .. warning::
+   .. warning::
 
-     Don't even *think* of using this.  Use pip_ and distribute_!
+      Don't even *think* of using this.  Use pip_ and distribute_!
 
 .. snippet:: flatten_nested_lists.py
+   :synopsis: Flatten nested lists
 
-  Flattens nested lists
+   Flattens nested lists
 
 .. snippet:: magic_database.py
+   :synopsis: mimetype and encoding detection with libmagic
 
-  Detect mimetype and encoding of files using the Python binding of libmagic_
+   Detect mimetype and encoding of files using the Python binding of libmagic_
 
 .. snippet:: onetimepad.py
+   :synopsis: One-time pad cipher
 
-  simple `one-time pad`_ implemented in Python 3
+   simple `one-time pad`_ implemented in Python 3
 
 .. snippet:: ping.py
+   :synopsis: ping implementation with raw sockets
 
-  The classic `ping(8)`_ utility implemented in Python
+   The classic `ping(8)`_ utility implemented in Python
 
 .. snippet:: pruefercode.py
+   :synopsis: Prüfer code calculation
 
-  Two different algorithms to calculate the Prüfer code for graphs
+   Two different algorithms to calculate the Prüfer code for graphs
 
 .. snippet:: pwgen.py
+   :synopsis: random password generation
 
-  Password generator implemented using :py:mod:`random`
+   Password generator implemented using :py:mod:`random`
 
 .. snippet:: pycrypto_aes_padding.py
+   :synopsis: AES with padding
 
-  Enhances the AES_ implementation of pycrypto_ with proper padding
+   Enhances the AES_ implementation of pycrypto_ with proper padding
 
 .. snippet:: screenshot.py
+   :synopsis: Screenshots on X11
 
-  Take screenshots by window title using `xwininfo(1)`_ and `import(1)`_ (from ImageMagick_)
+   Take screenshots by window title using `xwininfo(1)`_ and `import(1)`_ (from ImageMagick_)
 
 .. snippet:: ssh_client.py
+   :synopsis: SSH client with paramiko
 
-  Simple paramiko_ demonstration
+   Simple paramiko_ demonstration
 
 .. snippet:: xmpp_muc_logger.py
+   :synopsis: Logging Jabber MUCs
 
-  Log multiple Jabber MUCs using :py:mod:`threading` and xmpppy_
+   Log multiple Jabber MUCs using :py:mod:`threading` and xmpppy_
 
 .. snippet:: xmpp_muc_logger_unthreaded.py
+   :synopsis: Log a single Jabber MUC
 
-  Log a single MUC, unthreaded
+   Log a single MUC, unthreaded
 
 
 .. _configobj: http://www.voidspace.org.uk/python/configobj.html

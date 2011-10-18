@@ -19,8 +19,9 @@ C++ snippets
 ------------
 
 .. snippet:: qimage_from_gdk_pixbuf.cpp
+   :synopsis: Convert GdkPixbuf into QImage
 
-  Convert GdkPixbuf_ (from GDK-PixBuf_ library) to QImage_.
+   Convert GdkPixbuf_ (from GDK-PixBuf_ library) to QImage_.
 
 
 Python snippets
@@ -32,106 +33,130 @@ Python snippets
 
 
 .. snippet:: checkable_filesystem_model.py
+   :synopsis: QFileSystemModel with checkboxes
 
    :py:class:`~PySide.QtGui.QFileSystemModel`\ -derived model, which adds
    checkboxes to file names
 
 .. snippet:: countdown.py
+   :synopsis: Qt4 countdown clock
 
-  A simple countdown clock
+   A simple countdown clock
 
 .. snippet:: dbus_trayicon.py
+   :synopsis: Python dbus communication in Qt4
 
-  Combines Qt4 and python-dbus to create a remote-controllable,
-  single-instance systray application
+   Combines Qt4 and python-dbus to create a remote-controllable,
+   single-instance systray application
 
 .. snippet:: foldable_checkboxes.py
+   :synopsis: Foldable groups of checkboxes in Qt4
 
-  A special :py:class:`~PySide.QtGui.QTreeWidget`, which displays foldable
-  groups of checkboxes.
+   A special :py:class:`~PySide.QtGui.QTreeWidget`, which displays foldable
+   groups of checkboxes.
 
 .. snippet:: frameless_fullscreen.py
+   :synopsis: Fullscreen window without frame
 
-  Create a fullscreen window without frame
+   Create a fullscreen window without frame
 
 .. snippet:: painting.py
+   :synopsis: Qt4 paint system demonstration
 
-  Paint a rotating spiral to demonstrate the Qt4 painting API
+   Paint a rotating spiral to demonstrate the Qt4 painting API
 
 .. snippet:: icons_listview.py
+   :synopsis: Icons in QListView
 
-  The art of having icons in your :py:class:`~PySide.QtGui.QListView`
+   The art of having icons in your :py:class:`~PySide.QtGui.QListView`
 
 .. snippet:: image_scaling.py
+   :synopsis: Drawing and scaling of images in Qt4
 
-  A custom widget to draw and scale images
+   A custom widget to draw and scale images
 
 .. snippet:: input_validation.py
+   :synopsis: Input validation with QValidator
 
-  Validating input using a custom :py:class:`~PySide.QtGui.QValidator`
+   Validating input using a custom :py:class:`~PySide.QtGui.QValidator`
 
 .. snippet:: phonon_audio.py
+   :synopsis: Audio output with Phonon
 
-  Using :py:class:`~PySide.phonon.Phonon` to create a very simple audio player
+   Using :py:class:`~PySide.phonon.Phonon` to create a very simple audio player
 
 .. snippet:: phonon_duplicate_video.py
+   :synopsis: Duplicate video output with Phonon
 
-  Duplicate video streams to different playback widgets using
-  :py:mod:`~PySide.phonon.Phonon` (requires GStreamer backend)
+   Duplicate video streams to different playback widgets using
+   :py:mod:`~PySide.phonon.Phonon` (requires GStreamer backend)
 
 .. snippet:: phonon_video.py
+   :synopsis: Video output with Phonon
 
-  Using :py:mod:`~PySide.phonon.Phonon` to create a very simple video player
+   Using :py:mod:`~PySide.phonon.Phonon` to create a very simple video player
 
 .. snippet:: simple_shell_widget.py
+   :synopsis: QProcess output streams
 
-  Live catching of subprocess output using :py:class:`~PySide.QtCore.QProcess`
+   Live catching of subprocess output using :py:class:`~PySide.QtCore.QProcess`
 
 .. snippet:: table_header_alignment.py
+   :synopsis: Header alignment in QTableView
 
-  Controlling the alignment of table headers
-  :py:class:`~PySide.QtGui.QTableView`
+   Controlling the alignment of table headers
+   :py:class:`~PySide.QtGui.QTableView`
 
 .. snippet:: table_resize.py
+   :synopsis: Automatic column resizing in QTableView
 
-  A simple :py:class:`~PySide.QtGui.QTableView`-derived class, which resizes
-  columns automatically, if the view is resized
+   A simple :py:class:`~PySide.QtGui.QTableView`-derived class, which resizes
+   columns automatically, if the view is resized
 
 .. snippet:: tcp_socket.py
+   :synopsis: TCP sockets in Qt4
 
-  Illustrates the use of Qt4's tcp network facilities by implementing a very
-  simple chat program
+   Illustrates the use of Qt4's tcp network facilities by implementing a very
+   simple chat program
 
 .. snippet:: text_editor.py
              text_editor.ui
+   :synopsis: Simple Qt4 text editor
 
-  A simple plain text editor.
+   A simple plain text editor.
 
 .. snippet:: thread_progress.py
+   :synopsis: Inter-thread communication in Qt4
 
-  A basic example for background threads and progress reporting with
-  :py:class:`~PySide.QtGui.QProgressBar` and :py:class:`~PySide.QtCore.QThread`
+   A basic example for background threads and progress reporting with
+   :py:class:`~PySide.QtGui.QProgressBar` and
+   :py:class:`~PySide.QtCore.QThread`
 
 .. snippet:: toolbar_in_tabs.py
+   :synopsis: Toolbars inside QTabWidget
 
-  Using toolbars within a :py:class:`~PySide.QtGui.QTabWidget` with a bit of a
-  dirty trick
+   Using toolbars within a :py:class:`~PySide.QtGui.QTabWidget` with a bit of a
+   dirty trick
 
 .. snippet:: webkit_render_to_image.py
+   :synopsis: Render website to image with QtWebkit
 
-  render a website to an image file using :py:mod:`~PySide.QtWebkit`
+   Render a website to an image file using :py:mod:`~PySide.QtWebkit`
 
 .. snippet:: window_screenshot.py
+   :synopsis: Window screenshots with Qt
 
-  Take a screenshot of the window client area and display the screenshot.
+   Take a screenshot of the window client area and display the screenshot.
 
 .. snippet:: x11_key_names.py
+   :synopsis: Qt4 key codes to X11 key names
 
-  Turn key codes to X11 key names
+   Turn key codes to X11 key names
 
 .. snippet:: xml_model.py
+   :synopsis: Custom Qt4 model classes
 
-  The power of custom model classes in Qt4
+   The power of custom model classes in Qt4
 
 
 .. toctree::
