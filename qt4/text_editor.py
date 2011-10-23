@@ -161,8 +161,8 @@ class TextEditor(QMainWindow):
         self.findPrevious.setDefaultAction(self.actionFindPrevious)
 
     def loadSettings(self):
-        self.restoreGeometry(self.settings.value('texteditor/geoemtry') or '')
-        self.restoreState(self.settings.value('texteditor/state') or '')
+        self.restoreGeometry(self.settings.value('texteditor/geoemtry') or b'')
+        self.restoreState(self.settings.value('texteditor/state') or b'')
         self.searchCaseSensitive.setChecked(
             self.settings.value('search/case_sensitive', False)=='true')
 
