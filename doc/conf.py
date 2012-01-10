@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2011, 2012 Sebastian Wiesner <lunaryorn@googlemail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -66,3 +66,16 @@ extlinks = {
 }
 
 snippet_source_url = 'https://github.com/lunaryorn/snippets/blob/master/{snippet}'
+
+
+def configure_github_pages(app, exc):
+    if app.builder.name == 'html':
+        # inhibit github pages site processor
+        open(os.path.join(app.outdir, '.nojekyll'), 'w').close()
+        with open(os.path.join(app.outdir, 'CNAME'), 'w') as stream:
+            stream.write('snippets.lunaryorn.de\n')
+
+
+def setup(app):
+    app.connect('build-finished', configure_github_pages)
+
