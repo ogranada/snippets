@@ -101,6 +101,11 @@ Python snippets
 
    Live catching of subprocess output using :py:class:`~PySide.QtCore.QProcess`
 
+.. snippet:: sort_filter_model.py
+   :synopsis: Sorting and filtering of models
+
+   Sort and filter a model with :py:class:`~PySide.QtCore.QSortFilterProxyModel`
+
 .. snippet:: table_header_alignment.py
    :synopsis: Header alignment in QTableView
 
