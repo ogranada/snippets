@@ -104,7 +104,7 @@ Python snippets
 .. snippet:: sort_filter_model.py
    :synopsis: Sorting and filtering of models
 
-   Sort and filter a model with :py:class:`~PySide.QtCore.QSortFilterProxyModel`
+   Sort and filter a model with :py:class:`~PySide.QtGui.QSortFilterProxyModel`
 
 .. snippet:: table_header_alignment.py
    :synopsis: Header alignment in QTableView
