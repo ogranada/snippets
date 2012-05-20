@@ -58,7 +58,7 @@ html_theme = 'agogo'
 html_title = 'Snippets'
 
 intersphinx_mapping = {'python': ('http://docs.python.org/', None),
-                       'pyudev': ('http://packages.python.org/pyudev', None),
+                       'pyudev': ('http://pyudev.readthedocs.org/en/latest/', None),
                        'pyside': ('http://www.pyside.org/docs/pyside/', None)}
 
 extlinks = {
