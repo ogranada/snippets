@@ -56,6 +56,12 @@ Available snippets
 
    The classic `ping(8)`_ utility implemented in Python
 
+.. snippet:: posix_getch.py
+   :synopsis: POSIX getch() implementation
+
+   POSIX-compatible implementation of :py:func:`msvcrt.getch()` with
+   :py:mod:`termios`.  See :snippet:`posix_getch.c` for a C implementation.
+
 .. snippet:: pruefercode.py
    :synopsis: Prüfer code calculation
 
