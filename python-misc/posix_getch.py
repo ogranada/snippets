@@ -23,6 +23,7 @@ from __future__ import unicode_literals, print_function
 
 import sys
 import os
+import tty
 import termios
 
 
@@ -36,18 +37,12 @@ def getch():
     Return the character read from terminal as byte string.
     """
     tc_attrib = termios.tcgetattr(sys.stdin.fileno())
-    iflag, oflag, cflag, lflag, ispeed, ospeed, cc = tc_attrib
-
-    termios.tcsetattr(sys.stdin.fileno(), termios.TCSANOW,
-                      [iflag, oflag, cflag,
-                       lflag & ~termios.ICANON & ~termios.ECHO,
-                       ispeed, ospeed, cc])
-
+    tty.setraw(sys.stdin.fileno(), termios.TCSANOW)
     try:
         return os.read(sys.stdin.fileno(), 1)
     finally:
-        termios.tcsetattr(sys.stdin.fileno(), termios.TCSANOW,
-                          [iflag, oflag, cflag, lflag, ispeed, ospeed, cc])
+        # reset the terminal again
+        termios.tcsetattr(sys.stdin.fileno(), termios.TCSANOW, tc_attrib)
 
 
 def main():
