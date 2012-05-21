@@ -14,20 +14,21 @@
 
 int getch () {
     int ch;
-    struct termios tc_attrib;
-    if (tcgetattr(STDIN_FILENO, &tc_attrib))
+    struct termios tc_attrib_old;
+    struct termios tc_attrib_raw;
+
+    if (tcgetattr(STDIN_FILENO, &tc_attrib_old))
         return -1;
 
-    tcflag_t lflag = tc_attrib.c_lflag;
-    tc_attrib.c_lflag &= ~ICANON & ~ECHO;
+    tc_attrib_raw = tc_attrib_old;
+    cfmakeraw(&tc_attrib_raw);
 
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &tc_attrib))
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &tc_attrib_raw))
         return -1;
 
     ch = getchar();
 
-    tc_attrib.c_lflag = lflag;
-    tcsetattr (STDIN_FILENO, TCSANOW, &tc_attrib);
+    tcsetattr(STDIN_FILENO, TCSANOW, &tc_attrib_old);
     return ch;
 }
 
