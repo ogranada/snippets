@@ -38,9 +38,15 @@ int main(void) {
     fflush(stdout);
     int input = getch();
     printf("\n");
-    if (!input)
+    if (!input) {
         fprintf(stderr, "Could not read character");
-    else
+        return 1;
+    } else {
         printf("Read character '%c'\n", input);
-    return 0;
+        printf("Enter a character: ");
+        fflush(stdout);
+        input = getchar();
+        printf("Read character '%c'\n", input);
+        return 0;
+    }
 }

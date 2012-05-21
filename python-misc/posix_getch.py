@@ -51,6 +51,10 @@ def main():
     character = getch()
     print()
     print('Read character {0!r}'.format(character))
+    print('enter a character:', end=' ')
+    sys.stdout.flush()
+    character = sys.stdin.read(1)
+    print('Read character {0!r}'.format(character))
 
 
 if __name__ == '__main__':
