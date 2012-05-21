@@ -60,6 +60,7 @@ def normalized_snippet_name(name, directory=None):
         snippet = posixpath.join(directory, name)
     else:
         snippet = name
+    snippet = snippet.lstrip('/')
     return posixpath.normpath(snippet)
 
 
@@ -166,14 +167,16 @@ class Snippet(ObjectDescription):
 class SnippetXRefRole(XRefRole):
 
     def process_link(self, env, refnode, has_explicit_title, title, target):
-        refnode['snip:directory'] = env.temp_data.get('snip:directory')
 
         if not has_explicit_title:
             target = target.lstrip('~')
             if title.startswith('~'):
                 _, title = posixpath.split(title)
 
-        return title, target
+        if not target.startswith('/'):
+            refnode['snip:directory'] = env.temp_data.get('snip:directory')
+
+        return title.lstrip('/'), target
 
 
 class DirectoryXRefRole(XRefRole):
