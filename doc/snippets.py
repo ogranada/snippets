@@ -32,9 +32,8 @@ from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 import posixpath
-from operator import itemgetter
 from itertools import groupby
-from collections import namedtuple, defaultdict
+from collections import namedtuple
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -44,7 +43,6 @@ from sphinx.domains import Domain, ObjType, Index
 from sphinx.directives import ObjectDescription
 from sphinx.util.compat import Directive
 from sphinx.util.nodes import make_refnode
-
 
 
 SnippetEntry = namedtuple('SnippetEntry', 'docname synopsis')
