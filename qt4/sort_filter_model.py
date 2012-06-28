@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2012 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2012 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 
     Sorting and filtering with ``QSortFilterProxyModel``.
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
 """
 
 

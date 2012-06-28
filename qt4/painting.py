@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 """
     Paint a rotating spiral in Qt.
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
 """
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright (c) 2010, 2011 Christian Hausknecht <christian.hausknecht@gmx.de>
-# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@
 
     .. _posting: http://www.python-forum.de/viewtopic.php?f=11&t=24036
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
     .. moduleauthor::  Christian Hausknecht <christian.hausknecht@gmx.de>
 """
 

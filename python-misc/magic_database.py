@@ -1,4 +1,4 @@
-# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2010 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -13,7 +13,7 @@
 
     Demonstrate the usage of the magic database in python.
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
 """
 
 from __future__ import (print_function, division, unicode_literals,

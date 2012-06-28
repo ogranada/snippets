@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2008, 2009, 2011 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -15,7 +15,7 @@
 
     Implements a simple ssh client using the paramiko library.
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
 """
 
 

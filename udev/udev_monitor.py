@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 """
     Monitor mouse devices with udev.
 
-    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
+    .. moduleauthor::  Sebastian Wiesner  <lunaryorn@gmail.com>
 """
 
 from __future__ import (print_function, division, unicode_literals,

@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@googlemail.com>
+# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -334,7 +334,7 @@ class TextEditor(QMainWindow):
 
 <p>An trivial text editor implemented in Qt</p>
 
-<p>Copyright © 2011 <a href="mailto:lunaryorn@googlemail.com">Sebastian
+<p>Copyright © 2011 <a href="mailto:lunaryorn@gmail.com">Sebastian
 Wiesner</a></p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a
